@@ -1,2 +1,5 @@
 /*
 !README
+!/app/main.py
+!/static/css/main.css
+!/templates/index.html
