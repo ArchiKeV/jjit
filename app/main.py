@@ -17,7 +17,7 @@ base = declarative_base()
 engine = create_engine(f'sqlite:///{db_path}', echo=True)
 
 # FastAPI configuration
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="../templates")
 app = FastAPI()
 
 
