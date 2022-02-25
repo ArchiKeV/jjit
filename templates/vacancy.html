@@ -22,6 +22,7 @@
 <main class="main">
   <h1 class="main__title">{{ vacancy['title'] }}</h1>
   <h2 class="main__subtitle">Company: {{ vacancy['company_name'] }}</h2>
+  <div>{{ vacancy['description']|safe }}</div>
   <div class="table-wrapper">
     <table class="table">
       <thead class="table__header">
