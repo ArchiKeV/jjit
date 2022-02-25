@@ -3,4 +3,6 @@
 !/app/main.py
 !/static/css/main.css
 !/templates/index.html
+!/templates/vacancy.html
+!/templates/vacancy_list.html
 !requirements

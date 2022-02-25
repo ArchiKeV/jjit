@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacancy list</title>
+</head>
+<body>
+    <table>
+        <tr><th>ID ({{ vac_len }})</th><th>Company name</th><th>Comment</th><th>Rate</th></tr>
+        {% for vacancy in list_of_vacancy %}
+            <tr><td><a href="/vacancy?vac_id={{ vacancy.id }}">{{ vacancy.title }}</a></td><td>{{ vacancy.company_name }}</td><td>{{ vacancy.comment }}</td><td>{{ vacancy.rate }}</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

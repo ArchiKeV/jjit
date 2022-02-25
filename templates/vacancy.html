@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacancy - {{ vacancy['id'] }}</title>
+</head>
+<body>
+    <h3>{{ vacancy['title'] }}</h3>
+    <h3>Company: {{ vacancy['company_name'] }}</h3>
+    <table>
+        <tr><th>Skill</th><th>Level</th><tr>
+        {% for skill_dict in skills %}
+            <tr><td>{{ skill_dict['skill'] }}</td><td>{{ skill_dict['level'] }}</td>
+        {% endfor %}
+    </table>
+</body>
+</html>

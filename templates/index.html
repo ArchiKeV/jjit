@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>JJIT parser</title>
+</head>
+<body>
+    <h3>Hello, this is a JJIT parser</h3>
+    <h3>Number of vacancies uploaded {{ vac_num }}</h3>
+    <form action="/refresh">
+        <button>Refresh vacancy list</button>
+    </form>
+    <form action="page/new.html" target="_blank">
+        <button>Go to vacancy</button>
+    </form>
+    <form method="get" action="/vacancy_list">
+        <fieldset>
+            <legend>Specialisations:</legend>
+            {% for input_value in specs_list %}
+                <label>
+                    <input type="checkbox" name="spec" value="{{ input_value }}">{{ input_value }}
+                </label>
+            {% endfor %}
+            <br>
+            <input type="submit" value="Go" />
+        </fieldset>
+</form>
+</body>
+</html>

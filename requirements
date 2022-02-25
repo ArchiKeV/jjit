@@ -1,0 +1,6 @@
+Brotli
+fastapi
+Jinja2
+requests
+SQLAlchemy
+uvicorn
