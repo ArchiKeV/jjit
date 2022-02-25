@@ -204,6 +204,35 @@ def write_vac_list_to_db(vac_list):
         ses.commit()
 
 
+def load_vacancy(vac_id):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'ru',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Type': 'application/json',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Referer': f'https://justjoin.it/offers/{vac_id}',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Cache-Control': 'max-age=0'
+    }
+    url = f'https://justjoin.it/api/offers/{vac_id}'
+    response = requests.get(url=url, headers=headers)
+    return response.json()
+
+
+def write_vac_to_db(vac_dict, vac: Vacancy):
+    vac.description = vac_dict['body']
+    if len(vac_dict['skills']) > 3:
+        for enum, skill in enumerate(vac_dict['skills']):
+            if enum > 2:
+                setattr(vac, f'skill_{enum + 1:02}', skill['name'])
+                setattr(vac, f'skill_{enum + 1:02}_level', skill['level'])
+
+
 @app.on_event("startup")
 def startup_event():
     ...
@@ -247,6 +276,9 @@ async def vacancy_list(request: Request, spec: List[str] = Query(None)):
 async def vacancy(request: Request, vac_id: str = None):
     with session.begin() as ses:
         selected_vacancy = ses.query(Vacancy).filter(Vacancy.id.is_(vac_id)).first()
+        if not selected_vacancy.description:
+            write_vac_to_db(load_vacancy(vac_id), selected_vacancy)
+            selected_vacancy = ses.query(Vacancy).filter(Vacancy.id.is_(vac_id)).first()
         vacancy_dict = selected_vacancy.__dict__
         delete_attr = []
         for key in vacancy_dict:
