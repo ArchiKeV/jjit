@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vacancy - {{ vacancy['id'] }}</title>
+  <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="JJIT parser">
+  <meta name="description"
+        content="JJIT parser">
+
+  <title>Vacancy - {{ vacancy['id'] }}</title>
+
+  <link href="{{ url_for('static', path='/css/reset.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
 </head>
-<body>
-    <h3>{{ vacancy['title'] }}</h3>
-    <h3>Company: {{ vacancy['company_name'] }}</h3>
-    <table>
-        <tr><th>Skill</th><th>Level</th><tr>
-        {% for skill_dict in skills %}
-            <tr><td>{{ skill_dict['skill'] }}</td><td>{{ skill_dict['level'] }}</td>
-        {% endfor %}
+<body class="body">
+<header class="header">
+  <a class="button" id="back" href=""> < Back</a>
+  <a class="button" href="/">Main page</a>
+</header>
+<main class="main">
+  <h1 class="main__title">{{ vacancy['title'] }}</h1>
+  <h2 class="main__subtitle">Company: {{ vacancy['company_name'] }}</h2>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead class="table__header">
+      <tr>
+        <th class="table__th">Skill</th>
+        <th class="table__th">Level</th>
+      <tr>
+      </thead>
+      <tbody class="table__body">
+      {% for skill_dict in skills %}
+      <tr class="table__tr">
+        <td class="table__td skill-td">{{ skill_dict['skill'] }}</td>
+        <td class="table__td skill-td">{{ skill_dict['level'] }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
     </table>
+  </div>
+</main>
+<footer class="footer"></footer>
 </body>
 </html>

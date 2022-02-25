@@ -1,29 +1,51 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>JJIT parser</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="JJIT parser">
+  <meta name="description"
+        content="JJIT parser">
+
+  <title>JJIT parser</title>
+
+  <link href="{{ url_for('static', path='/css/reset.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
 </head>
-<body>
-    <h3>Hello, this is a JJIT parser</h3>
-    <h3>Number of vacancies uploaded {{ vac_num }}</h3>
-    <form action="/refresh">
-        <button>Refresh vacancy list</button>
-    </form>
-    <form action="page/new.html" target="_blank">
-        <button>Go to vacancy</button>
-    </form>
-    <form method="get" action="/vacancy_list">
-        <fieldset>
-            <legend>Specialisations:</legend>
-            {% for input_value in specs_list %}
-                <label>
-                    <input type="checkbox" name="spec" value="{{ input_value }}">{{ input_value }}
-                </label>
-            {% endfor %}
-            <br>
-            <input type="submit" value="Go" />
-        </fieldset>
-</form>
+<body class="body">
+<header class="header">
+  <a class="button" href="/">Main page</a>
+  <a class="button" href="/vacancy_list">All vacancies</a>
+</header>
+<main class="main">
+  <h1 class="main__title">Hello, this is a JJIT parser</h1>
+  <h2 class="main__subtitle">Number of vacancies uploaded: {{ vac_num }}</h2>
+  <form class="form-refresh" action="/refresh">
+    <button class="button">Refresh vacancy list</button>
+  </form>
+  <form class="form-specs" method="get" action="/vacancy_list">
+    <fieldset class="form-specs__fieldset">
+      <legend class="form-specs__legend">Specialisations:</legend>
+      <div class="form-specs__wrapper">
+        {% for input_value in specs_list %}
+        <label class="form-specs__label">
+          <input class="form-specs__input" type="checkbox" name="spec" value="{{ input_value }}">{{ input_value }}
+        </label>
+        {% endfor %}
+      </div>
+      <button class="button form-specs__button" type="submit">Go</button>
+    </fieldset>
+  </form>
+</main>
+<footer class="footer">
+  <p class="footer__text">Powered by:</p>
+  <a
+      class="link footer__link"
+      href="https://github.com/ArchiKeV"
+      target="_blank"
+      rel="noreferrer"
+  >AtachiShadow</a>
+</footer>
 </body>
 </html>

@@ -1,0 +1,196 @@
+.body {
+  min-height: 100vh;
+
+  font-size: 20px;
+
+  color: #ffffff;
+
+  background-color: #4b5162;
+}
+
+.header, .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  padding: 1em 2em;
+
+  gap: 1em;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1000px;
+  min-height: calc(100vh - 160px);
+  margin: 0 auto;
+  padding: 0 2em;
+
+  gap: 1em;
+}
+
+.main__title {
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.main__subtitle {
+  font-size: 1em;
+  text-align: center;
+}
+
+.button {
+  min-width: 8em;
+  padding: 0.1em 1em;
+
+  text-decoration: none;
+  color: #ffffff;
+  text-align: center;
+
+  border-radius: 1em;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+
+  transition: all 1s;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  color: #4b5162;
+
+  background-color: #ffffff;
+
+  transition: all 1s;
+}
+
+.form-refresh {
+
+}
+
+.form-specs__fieldset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 2em;
+
+  border-radius: 1em;
+  border: 2px solid #ffffff;
+}
+
+.form-specs__wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 0.3em 1em;
+}
+
+.form-specs__legend {
+  margin: 0 auto;
+  padding: 0 1em;
+
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.form-specs__label {
+  display: flex;
+  align-items: center;
+}
+
+.form-specs__input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  outline: none;
+
+  transition: 0.4s all linear;
+}
+
+.form-specs__input:checked {
+  border: 6px solid #ffffff;
+}
+
+.link {
+  text-decoration: underline solid #ffffff;
+  color: #ffffff;
+
+  transition: all 1s;
+}
+
+.link:visited {
+  text-decoration: underline solid #989898;
+  color: #989898;
+}
+
+.link:hover {
+  text-decoration: underline solid #989898;
+  color: #989898;
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.table__header {
+  position: sticky;
+  top: 0;
+
+  background-color: #4b5162;
+}
+
+.table__th {
+  padding: 0.2em 0.5em;
+
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.table__td {
+  padding: 0.1em 0.3em;
+}
+
+.skill-td {
+  text-align: center;
+}
+
+.table__tr:hover {
+  background-color: #3a3d4a;
+}
+
+/*576-767.98*/
+@media (max-width: 767.98px) {
+  .body {
+    font-size: 18px;
+  }
+
+  .main {
+    padding: 0 1em;
+  }
+
+  .table-wrapper {
+    display: inline-block;
+    max-width: 700px;
+    width: 100%;
+
+    overflow-x: scroll;
+
+    transform: scaleY(-1);
+  }
+
+  .table {
+    transform: scaleY(-1);
+  }
+}

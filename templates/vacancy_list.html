@@ -1,15 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vacancy list</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="JJIT parser">
+  <meta name="description"
+        content="JJIT parser">
+
+  <title>Vacancy list</title>
+
+  <link href="{{ url_for('static', path='/css/reset.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
 </head>
-<body>
-    <table>
-        <tr><th>ID ({{ vac_len }})</th><th>Company name</th><th>Comment</th><th>Rate</th></tr>
-        {% for vacancy in list_of_vacancy %}
-            <tr><td><a href="/vacancy?vac_id={{ vacancy.id }}">{{ vacancy.title }}</a></td><td>{{ vacancy.company_name }}</td><td>{{ vacancy.comment }}</td><td>{{ vacancy.rate }}</td></tr>
-        {% endfor %}
+<body class="body">
+<header class="header">
+  <a class="button" href="/">Main page</a>
+  <a class="button" href="/vacancy_list">All vacancies</a>
+</header>
+<main class="main">
+  <div class="table-wrapper">
+    <table class="table">
+      <thead class="table__header">
+      <tr>
+        <th class="table__th">ID ({{ vac_len }})</th>
+        <th class="table__th">Company name</th>
+        <th class="table__th">Comment</th>
+        <th class="table__th">Rate</th>
+      </tr>
+      </thead>
+      <tbody class="table__body">
+      {% for vacancy in list_of_vacancy %}
+      <tr class="table__tr">
+        <td class="table__td">
+          <a class="link" href="/vacancy?vac_id={{ vacancy.id }}">{{ vacancy.title }}</a>
+        </td>
+        <td class="table__td">{{ vacancy.company_name }}</td>
+        <td class="table__td">{{ vacancy.comment }}</td>
+        <td class="table__td">{{ vacancy.rate }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
     </table>
+  </div>
+</main>
+<footer class="footer"></footer>
 </body>
 </html>
