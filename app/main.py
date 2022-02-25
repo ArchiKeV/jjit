@@ -7,7 +7,9 @@ import brotli
 
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Query
+from pathlib import Path
 from typing import List
 import uvicorn
 
@@ -17,8 +19,13 @@ base = declarative_base()
 engine = create_engine(f'sqlite:///{db_path}', echo=True)
 
 # FastAPI configuration
-templates = Jinja2Templates(directory="../templates")
+templates = Jinja2Templates(directory=Path(__file__).parent.parent.absolute() / "templates")
 app = FastAPI()
+app.mount(
+    "/static",
+    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "static"),
+    name="static",
+)
 
 
 class Vacancy(base):
