@@ -296,7 +296,7 @@ async def vacancy(request: Request, vac_id: str = None):
                 'skill': vacancy_dict[key], 'level': vacancy_dict[f'{key}_level'],
                 'skill_old': vacancy_dict[f'{key}_old'], 'level_old': vacancy_dict[f'{key}_level_old']
             }
-            for key in list_of_skill_keys
+            for key in list_of_skill_keys if vacancy_dict.get(key, False)
         ]
         return templates.TemplateResponse(
             "vacancy.html", {"request": request, "vacancy": vacancy_dict, "skills": list_of_skills}
