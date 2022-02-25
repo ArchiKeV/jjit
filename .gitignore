@@ -6,3 +6,5 @@
 !/templates/vacancy.html
 !/templates/vacancy_list.html
 !requirements
+!init.bat
+!run.bat
