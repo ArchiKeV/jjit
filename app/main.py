@@ -172,15 +172,8 @@ def write_vac_list_to_db(vac_list):
             vac.pop('employment_types')
             vac.pop('company_logo_url')
             for enum, skill in enumerate(vac['skills']):
-                if enum == 0:
-                    vac['skill_01'] = skill['name']
-                    vac['skill_01_level'] = skill['level']
-                if enum == 1:
-                    vac['skill_02'] = skill['name']
-                    vac['skill_02_level'] = skill['level']
-                if enum == 2:
-                    vac['skill_03'] = skill['name']
-                    vac['skill_03_level'] = skill['level']
+                vac[f'skill_0{enum + 1}'] = skill['name']
+                vac[f'skill_0{enum + 1}_level'] = skill['level']
             vac.pop('skills')
             vac['remote_work'] = vac['remote']
             vac.pop('remote')
