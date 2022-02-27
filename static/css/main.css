@@ -117,7 +117,7 @@
   border: 2px solid #ffffff;
   outline: none;
 
-  transition: 0.4s all linear;
+  transition: 0.1s all linear;
 }
 
 .form-specs__input:checked {
@@ -131,23 +131,6 @@
   flex-wrap: wrap;
 
   gap: 1em;
-}
-
-.link {
-  text-decoration: underline solid #ffffff;
-  color: #ffffff;
-
-  transition: all 1s;
-}
-
-.link:visited {
-  text-decoration: underline solid #989898;
-  color: #989898;
-}
-
-.link:hover {
-  text-decoration: underline solid #989898;
-  color: #989898;
 }
 
 .table {
@@ -178,6 +161,23 @@
 
 .table__tr:hover {
   background-color: #3a3d4a;
+}
+
+a {
+  text-decoration: underline solid #ffffff;
+  color: #ffffff;
+
+  transition: all 1s;
+}
+
+a:visited {
+  text-decoration: underline solid #989898;
+  color: #989898;
+}
+
+a:hover {
+  text-decoration: underline solid #989898;
+  color: #989898;
 }
 
 /*576-767.98*/
