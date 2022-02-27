@@ -5,12 +5,15 @@ from sqlalchemy.orm.session import sessionmaker
 import requests
 import brotli
 
+from starlette.datastructures import URL, QueryParams
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Query
+from asgiref.typing import WWWScope
 from pathlib import Path
 from typing import List
+from uvicorn.protocols.utils import get_path_with_query_string
 import uvicorn
 
 # DB configuration
@@ -246,10 +249,12 @@ async def vacancy_refresh():
 
 
 spec_list = []
+path_with_query = ''
 
 
 @app.get("/vacancy_list")
 async def vacancy_list(request: Request, spec: List[str] = Query(None)):
+    global path_with_query
     global spec_list
     spec_list = spec
     with session.begin() as ses:
@@ -262,6 +267,7 @@ async def vacancy_list(request: Request, spec: List[str] = Query(None)):
                 list_of_vacancy.extend(vac_spec)
         else:
             list_of_vacancy = ses.query(Vacancy).all()
+        path_with_query = str(request.url.include_query_params()).split('/')[-1]
         return templates.TemplateResponse(
             "vacancy_list.html",
             {
@@ -274,6 +280,7 @@ async def vacancy_list(request: Request, spec: List[str] = Query(None)):
 
 @app.get("/vacancy")
 async def vacancy(request: Request, vac_id: str = None):
+    global path_with_query
     with session.begin() as ses:
         selected_vacancy = ses.query(Vacancy).filter(Vacancy.id.is_(vac_id)).first()
         if not selected_vacancy.description:
@@ -298,8 +305,17 @@ async def vacancy(request: Request, vac_id: str = None):
             }
             for key in list_of_skill_keys if vacancy_dict.get(key, False)
         ]
+        print('ololo')
+        print(path_with_query)
+        print('ololo')
         return templates.TemplateResponse(
-            "vacancy.html", {"request": request, "vacancy": vacancy_dict, "skills": list_of_skills}
+            "vacancy.html",
+            {
+                "request": request,
+                "vacancy": vacancy_dict,
+                "skills": list_of_skills,
+                "path_with_query": path_with_query
+            }
         )
 
 
