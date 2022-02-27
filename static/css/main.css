@@ -1,3 +1,20 @@
+a {
+  text-decoration: underline solid #ffffff;
+  color: #ffffff;
+
+  transition: all 1s;
+}
+
+a:visited {
+  text-decoration: underline solid #989898;
+  color: #989898;
+}
+
+a:hover {
+  text-decoration: underline solid #989898;
+  color: #989898;
+}
+
 .body {
   min-height: 100vh;
 
@@ -60,11 +77,19 @@
 }
 
 .button:hover {
+  text-decoration: none;
   color: #4b5162;
 
   background-color: #ffffff;
 
   transition: all 1s;
+}
+
+.button:visited {
+  text-decoration: none;
+  color: #ffffff;
+
+  background-color: #ffffff;
 }
 
 .form-refresh {
@@ -161,23 +186,6 @@
 
 .table__tr:hover {
   background-color: #3a3d4a;
-}
-
-a {
-  text-decoration: underline solid #ffffff;
-  color: #ffffff;
-
-  transition: all 1s;
-}
-
-a:visited {
-  text-decoration: underline solid #989898;
-  color: #989898;
-}
-
-a:hover {
-  text-decoration: underline solid #989898;
-  color: #989898;
 }
 
 /*576-767.98*/
