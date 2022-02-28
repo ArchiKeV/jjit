@@ -253,18 +253,26 @@ path_with_query = ''
 
 
 @app.get("/vacancy_list")
-async def vacancy_list(request: Request, spec: List[str] = Query(None)):
+async def vacancy_list(request: Request, spec: List[str] = Query(None), company: List[str] = Query(None)):
     global path_with_query
-    global spec_list
-    spec_list = spec
     with session.begin() as ses:
-        list_of_vacancy = []
-        if spec_list:
-            vac_with_specs = [
-                ses.query(Vacancy).filter(Vacancy.specialization.contains(spec)).all() for spec in spec_list
+        if spec and not company:
+            global spec_list
+            spec_list = spec
+            list_of_vacancy = []
+            if spec_list:
+                vac_with_specs = [
+                    ses.query(Vacancy).filter(Vacancy.specialization.contains(spec)).all() for spec in spec_list
+                ]
+                for vac_spec in vac_with_specs:
+                    list_of_vacancy.extend(vac_spec)
+        elif company and not spec:
+            list_of_vacancy = []
+            vac_with_company = [
+                ses.query(Vacancy).filter(Vacancy.company_name.contains(comp)).all() for comp in company
             ]
-            for vac_spec in vac_with_specs:
-                list_of_vacancy.extend(vac_spec)
+            for vac_company in vac_with_company:
+                list_of_vacancy.extend(vac_company)
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
