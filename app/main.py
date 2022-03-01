@@ -113,6 +113,7 @@ class Vacancy(base):
     comment = Column(String)
     rate = Column(Integer)
     status = Column(String)
+    open_to_hire_ukrainians = Column(Boolean)
 
 
 base.metadata.create_all(engine)
