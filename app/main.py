@@ -314,9 +314,6 @@ async def vacancy(request: Request, vac_id: str = None):
             }
             for key in list_of_skill_keys if vacancy_dict.get(key, False)
         ]
-        print('ololo')
-        print(path_with_query)
-        print('ololo')
         return templates.TemplateResponse(
             "vacancy.html",
             {
