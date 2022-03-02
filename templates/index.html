@@ -41,13 +41,11 @@
   </form>
   <form method="get" action="/vacancy_list">
     <fieldset class="form-specs__fieldset">
-      <legend class="form-specs__legend">Skills:</legend>
-      <div>
-        {% for key, value in unique_skills.items() %}
+      <legend class="form-specs__legend">Search by skills:</legend>
+      <div class="form-specs__wrapper">
         <label>
-          <input type="checkbox" name="unique_skill" value="{{ key }}">{{ key }} ({{ value }})
+          <input class="form-specs__search" type="search" name="skill" placeholder="Search">
         </label>
-        {% endfor %}
       </div>
       <div class="form-specs__buttons">
         <button class="button" type="reset">Reset</button>

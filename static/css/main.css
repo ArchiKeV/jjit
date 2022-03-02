@@ -92,10 +92,6 @@ a:hover {
   background-color: #ffffff;
 }
 
-.form-refresh {
-
-}
-
 .form-specs__fieldset {
   display: flex;
   flex-direction: column;
@@ -147,6 +143,42 @@ a:hover {
 
 .form-specs__input:checked {
   border: 6px solid #ffffff;
+}
+
+.form-specs__search {
+  width: 100%;
+  height: 2.12em;
+  padding: 0 2em 0 1em;
+
+  border-radius: 2em;
+  border: 2px solid #4b5162;
+
+  background-color: #666f88;
+  background-image: url(./../assets/search.svg);
+  background-size: 1em;
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+
+  color: #ffffff;
+  font-size: 0.9em;
+
+  transition: 0.1s all linear;
+}
+
+.form-specs__search::-webkit-input-placeholder {
+  color: #cdcccc;
+}
+
+.form-specs__search::-moz-placeholder {
+  color: #cdcccc;
+}
+
+.form-specs__search:active,
+.form-specs__search:focus {
+  outline: none;
+  border: 2px solid #ffffff;
+
+  transition: 0.1s all linear;
 }
 
 .form-specs__buttons {
