@@ -49,6 +49,11 @@ a:hover {
   gap: 1em;
 }
 
+.main_without-header {
+  padding: 1em 2em 0 2em;
+  min-height: calc(100vh - 80px);
+}
+
 .main__title {
   font-size: 1.2em;
   text-align: center;

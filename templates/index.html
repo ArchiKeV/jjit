@@ -14,10 +14,7 @@
   <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
 </head>
 <body class="body">
-<header class="header">
-
-</header>
-<main class="main">
+<main class="main main_without-header">
   <h1 class="main__title">Hello, this is a JJIT parser</h1>
   <h2 class="main__subtitle">Number of vacancies uploaded: {{ vac_num }}</h2>
   <form class="form-refresh" action="/refresh">
