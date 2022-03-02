@@ -76,6 +76,13 @@ a:hover {
   cursor: pointer;
 }
 
+.button:visited {
+   text-decoration: none;
+   color: #ffffff;
+
+   background-color: #ffffff;
+ }
+
 .button:hover {
   text-decoration: none;
   color: #4b5162;
@@ -83,13 +90,6 @@ a:hover {
   background-color: #ffffff;
 
   transition: all 1s;
-}
-
-.button:visited {
-  text-decoration: none;
-  color: #ffffff;
-
-  background-color: #ffffff;
 }
 
 .form-specs__fieldset {
