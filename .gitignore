@@ -6,7 +6,7 @@
 !/templates/index.html
 !/templates/vacancy.html
 !/templates/vacancy_list.html
-!/static/assets/search.svg
+!/static/assets/*
 !requirements
 !init.bat
 !run.bat
