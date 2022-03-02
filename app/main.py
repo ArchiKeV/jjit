@@ -254,10 +254,13 @@ path_with_query = ''
 
 
 @app.get("/vacancy_list")
-async def vacancy_list(request: Request, spec: List[str] = Query(None), company: List[str] = Query(None)):
+async def vacancy_list(
+        request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
+        skill: List[str] = Query(None)
+):
     global path_with_query
     with session.begin() as ses:
-        if spec and not company:
+        if spec and not company and not skill:
             global spec_list
             spec_list = spec
             list_of_vacancy = []
@@ -267,13 +270,25 @@ async def vacancy_list(request: Request, spec: List[str] = Query(None), company:
                 ]
                 for vac_spec in vac_with_specs:
                     list_of_vacancy.extend(vac_spec)
-        elif company and not spec:
+        elif company and not spec and not skill:
             list_of_vacancy = []
             vac_with_company = [
                 ses.query(Vacancy).filter(Vacancy.company_name.contains(comp)).all() for comp in company
             ]
             for vac_company in vac_with_company:
                 list_of_vacancy.extend(vac_company)
+        elif skill and not company and not spec:
+            list_of_vacancy = []
+            vac_with_skill = []
+            vacancy_skills_attr = [
+                x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
+            ]
+            for skill_attr in vacancy_skills_attr:
+                vac_with_skill.extend(
+                    [ses.query(Vacancy).filter(getattr(Vacancy, skill_attr).contains(sk)).all() for sk in skill]
+                )
+            for vac_skill in vac_with_skill:
+                list_of_vacancy.extend(vac_skill)
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
@@ -330,8 +345,21 @@ async def home_page(request: Request):
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
+        vacancy_skills_attr = [
+            x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
+        ]
+        print(vacancy_skills_attr)
+        unique_skills = {}
+        for skill_attr in vacancy_skills_attr:
+            for skill in ses.query(getattr(Vacancy, skill_attr)).all():
+                if not unique_skills.get(skill[0], False):
+                    unique_skills.update({skill[0]: 1})
+                else:
+                    unique_skills[skill[0]] += 1
     return templates.TemplateResponse(
-        "index.html", {"request": request, "vac_num": vacancy_count, "specs_list": specs_list}
+        "index.html", {
+            "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "unique_skills": unique_skills
+        }
     )
 
 
