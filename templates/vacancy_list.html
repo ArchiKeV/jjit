@@ -19,6 +19,7 @@
 </header>
 <main class="main">
   <div class="table-wrapper">
+    {% if list_of_vacancy %}
     <table class="table">
       <thead class="table__header">
       <tr>
@@ -43,6 +44,9 @@
       {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <p>Nothing found</p>
+    {% endif %}
   </div>
 </main>
 <footer class="footer"></footer>
