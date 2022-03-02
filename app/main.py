@@ -237,21 +237,24 @@ def write_vac_to_db(vac_dict, vac: Vacancy):
                 setattr(vac, f'skill_{enum + 1:02}_level', skill['level'])
 
 
-unique_skills = {}
+unique_skills = []
 
 
 def get_skills_list_with_repet_num():
     global unique_skills
+    raw_unique_skills = {}
     with session.begin() as ses:
         vacancy_skills_attr = [
             x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
         ]
         for skill_attr in vacancy_skills_attr:
             for skill in ses.query(getattr(Vacancy, skill_attr)).all():
-                if not unique_skills.get(skill[0], False):
-                    unique_skills.update({skill[0]: 1})
+                if not raw_unique_skills.get(skill[0], False):
+                    raw_unique_skills.update({skill[0]: 1})
                 else:
-                    unique_skills[skill[0]] += 1
+                    raw_unique_skills[skill[0]] += 1
+        for skill_name, skill_num in raw_unique_skills.items():
+            unique_skills.append({"name": skill_name, "num": skill_num})
 
 
 get_skills_list_with_repet_num()
@@ -366,9 +369,15 @@ async def home_page(request: Request):
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
     return templates.TemplateResponse(
         "index.html", {
-            "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "unique_skills": unique_skills
+            "request": request, "vac_num": vacancy_count, "specs_list": specs_list
         }
     )
+
+
+@app.get("/api/skills")
+async def api_skills():
+    global unique_skills
+    return unique_skills
 
 
 if __name__ == '__main__':
