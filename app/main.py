@@ -277,7 +277,7 @@ async def vacancy_list(
             ]
             for vac_company in vac_with_company:
                 list_of_vacancy.extend(vac_company)
-        elif skill and not company and not spec:
+        elif skill[0].strip() and not company and not spec:
             list_of_vacancy = []
             vac_with_skill = []
             vacancy_skills_attr = [
@@ -289,6 +289,8 @@ async def vacancy_list(
                 )
             for vac_skill in vac_with_skill:
                 list_of_vacancy.extend(vac_skill)
+        elif skill and not skill[0].strip():
+            list_of_vacancy = []
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
