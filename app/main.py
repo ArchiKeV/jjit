@@ -237,15 +237,31 @@ def write_vac_to_db(vac_dict, vac: Vacancy):
                 setattr(vac, f'skill_{enum + 1:02}_level', skill['level'])
 
 
-@app.on_event("startup")
-def startup_event():
-    ...
+unique_skills = {}
+
+
+def get_skills_list_with_repet_num():
+    global unique_skills
+    with session.begin() as ses:
+        vacancy_skills_attr = [
+            x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
+        ]
+        for skill_attr in vacancy_skills_attr:
+            for skill in ses.query(getattr(Vacancy, skill_attr)).all():
+                if not unique_skills.get(skill[0], False):
+                    unique_skills.update({skill[0]: 1})
+                else:
+                    unique_skills[skill[0]] += 1
+
+
+get_skills_list_with_repet_num()
 
 
 @app.get("/refresh")
 async def vacancy_refresh():
     list_of_vacancy = load_vacancy_list()
     write_vac_list_to_db(list_of_vacancy)
+    get_skills_list_with_repet_num()
     return RedirectResponse(url=app.url_path_for("home_page"))
 
 
@@ -344,20 +360,10 @@ async def vacancy(request: Request, vac_id: str = None):
 
 @app.get("/")
 async def home_page(request: Request):
+    global unique_skills
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
-        vacancy_skills_attr = [
-            x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
-        ]
-        print(vacancy_skills_attr)
-        unique_skills = {}
-        for skill_attr in vacancy_skills_attr:
-            for skill in ses.query(getattr(Vacancy, skill_attr)).all():
-                if not unique_skills.get(skill[0], False):
-                    unique_skills.update({skill[0]: 1})
-                else:
-                    unique_skills[skill[0]] += 1
     return templates.TemplateResponse(
         "index.html", {
             "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "unique_skills": unique_skills
