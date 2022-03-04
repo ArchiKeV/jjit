@@ -368,7 +368,8 @@ async def home_page(request: Request):
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
     return templates.TemplateResponse(
-        "index.html", {
+        "index.html",
+        {
             "request": request, "vac_num": vacancy_count, "specs_list": specs_list
         }
     )
