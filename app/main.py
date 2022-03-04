@@ -253,8 +253,8 @@ def get_skills_list_with_repet_num():
                     raw_unique_skills.update({skill[0]: 1})
                 else:
                     raw_unique_skills[skill[0]] += 1
-        for skill_name, skill_num in raw_unique_skills.items():
-            unique_skills.append({"name": skill_name, "num": skill_num})
+        for num, skill_name, skill_num in enumerate(raw_unique_skills.items()):
+            unique_skills.append({"name": skill_name, "num": skill_num, "id": num})
 
 
 get_skills_list_with_repet_num()
@@ -275,11 +275,11 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill: List[str] = Query(None)
+        skill_id: List[int] = Query(None)
 ):
     global path_with_query
     with session.begin() as ses:
-        if spec and not company and not skill:
+        if spec and not company and not skill_id:
             global spec_list
             spec_list = spec
             list_of_vacancy = []
@@ -289,14 +289,14 @@ async def vacancy_list(
                 ]
                 for vac_spec in vac_with_specs:
                     list_of_vacancy.extend(vac_spec)
-        elif company and not spec and not skill:
+        elif company and not spec and not skill_id:
             list_of_vacancy = []
             vac_with_company = [
                 ses.query(Vacancy).filter(Vacancy.company_name.contains(comp)).all() for comp in company
             ]
             for vac_company in vac_with_company:
                 list_of_vacancy.extend(vac_company)
-        elif skill[0].strip() and not company and not spec:
+        elif skill_id[0] and not company and not spec:
             list_of_vacancy = []
             vac_with_skill = []
             vacancy_skills_attr = [
@@ -304,12 +304,14 @@ async def vacancy_list(
             ]
             for skill_attr in vacancy_skills_attr:
                 vac_with_skill.extend(
-                    [ses.query(Vacancy).filter(getattr(Vacancy, skill_attr).contains(sk)).all() for sk in skill]
+                    [
+                        ses.query(Vacancy).filter(
+                            getattr(Vacancy, skill_attr).contains(unique_skills[sk]["name"])
+                        ).all() for sk in skill_id
+                    ]
                 )
             for vac_skill in vac_with_skill:
                 list_of_vacancy.extend(vac_skill)
-        elif skill and not skill[0].strip():
-            list_of_vacancy = []
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
