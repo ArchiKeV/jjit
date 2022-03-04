@@ -5,15 +5,12 @@ from sqlalchemy.orm.session import sessionmaker
 import requests
 import brotli
 
-from starlette.datastructures import URL, QueryParams
 from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Query
-from asgiref.typing import WWWScope
 from pathlib import Path
 from typing import List
-from uvicorn.protocols.utils import get_path_with_query_string
 import uvicorn
 
 # DB configuration
