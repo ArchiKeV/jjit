@@ -248,7 +248,7 @@ def get_skills_list_with_repet_num():
             x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
         ]
         for skill_attr in vacancy_skills_attr:
-            for skill in ses.query(getattr(Vacancy, skill_attr)).all():
+            for skill in ses.query(getattr(Vacancy, skill_attr)).filter(getattr(Vacancy, skill_attr).is_not(None)).all():
                 if not raw_unique_skills.get(skill[0], False):
                     raw_unique_skills.update({skill[0]: 1})
                 else:
