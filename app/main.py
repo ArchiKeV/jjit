@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Boolean, Integer
+from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import sessionmaker
 
@@ -272,11 +272,12 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill_id: List[int] = Query(None)
+        skill_on_id: List[int] = Query(None)
 ):
     global path_with_query
+    global unique_skills
     with session.begin() as ses:
-        if spec and not company and not skill_id:
+        if spec and not company and not skill_on_id:
             global spec_list
             spec_list = spec
             list_of_vacancy = []
@@ -286,14 +287,14 @@ async def vacancy_list(
                 ]
                 for vac_spec in vac_with_specs:
                     list_of_vacancy.extend(vac_spec)
-        elif company and not spec and not skill_id:
+        elif company and not spec and not skill_on_id:
             list_of_vacancy = []
             vac_with_company = [
                 ses.query(Vacancy).filter(Vacancy.company_name.contains(comp)).all() for comp in company
             ]
             for vac_company in vac_with_company:
                 list_of_vacancy.extend(vac_company)
-        elif skill_id[0] and not company and not spec:
+        elif skill_on_id and not company and not spec:
             list_of_vacancy = []
             vac_with_skill = []
             vacancy_skills_attr = [
@@ -304,7 +305,7 @@ async def vacancy_list(
                     [
                         ses.query(Vacancy).filter(
                             getattr(Vacancy, skill_attr).contains(unique_skills[sk]["name"])
-                        ).all() for sk in skill_id
+                        ).all() for sk in skill_on_id
                     ]
                 )
             for vac_skill in vac_with_skill:
