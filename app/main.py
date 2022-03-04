@@ -363,7 +363,6 @@ async def vacancy(request: Request, vac_id: str = None):
 
 @app.get("/")
 async def home_page(request: Request):
-    global unique_skills
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
