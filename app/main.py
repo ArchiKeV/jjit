@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_
+from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_, and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import sessionmaker
 
@@ -272,7 +272,7 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill_on_id: List[int] = Query(None)
+        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None)
 ):
     global path_with_query
     global unique_skills
@@ -294,22 +294,32 @@ async def vacancy_list(
             ]
             for vac_company in vac_with_company:
                 list_of_vacancy.extend(vac_company)
-        elif skill_on_id and not company and not spec:
+        elif (skill_on_id or skill_off_id) and not company and not spec:
             list_of_vacancy = []
-            vac_with_skill = []
             vacancy_skills_attr = [
                 x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
             ]
-            for skill_attr in vacancy_skills_attr:
-                vac_with_skill.extend(
-                    [
-                        ses.query(Vacancy).filter(
-                            getattr(Vacancy, skill_attr).contains(unique_skills[sk]["name"])
-                        ).all() for sk in skill_on_id
-                    ]
-                )
-            for vac_skill in vac_with_skill:
-                list_of_vacancy.extend(vac_skill)
+            conditions = []
+            if skill_on_id:
+                for skill_id in skill_on_id:
+                    sub_conditions = []
+                    for skill_attr in vacancy_skills_attr:
+                        sub_conditions.append(
+                            getattr(Vacancy, skill_attr).contains(unique_skills[skill_id]["name"])
+                        )
+                    sub_conditions = or_(*sub_conditions)
+                    conditions.append(sub_conditions)
+            if skill_off_id:
+                for skill_id in skill_off_id:
+                    sub_conditions = []
+                    for skill_attr in vacancy_skills_attr:
+                        sub_conditions.append(
+                            not_(getattr(Vacancy, skill_attr).contains(unique_skills[skill_id]["name"]))
+                        )
+                    sub_conditions = or_(*sub_conditions)
+                    conditions.append(sub_conditions)
+            conditions = and_(*conditions)
+            list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
