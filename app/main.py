@@ -253,7 +253,7 @@ def get_skills_list_with_repet_num():
                     raw_unique_skills.update({skill[0]: 1})
                 else:
                     raw_unique_skills[skill[0]] += 1
-        for num, skill_name, skill_num in enumerate(raw_unique_skills.items()):
+        for num, (skill_name, skill_num) in enumerate(raw_unique_skills.items()):
             unique_skills.append({"name": skill_name, "num": skill_num, "id": num})
 
 
