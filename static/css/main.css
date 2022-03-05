@@ -151,8 +151,19 @@ a:hover {
   border: 6px solid #ffffff;
 }
 
+.form-specs__search-wrapper {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 0.3em 1em;
+}
+
 .form-specs__search {
-  width: 100%;
+  width: 14em;
   height: 2.12em;
   padding: 0 2em 0 1em;
 
@@ -166,7 +177,6 @@ a:hover {
   background-position: right 0.5em center;
 
   color: #ffffff;
-  font-size: 0.9em;
 
   transition: 0.1s all linear;
 }
@@ -225,6 +235,130 @@ a:hover {
 .table__tr:hover {
   background-color: #3a3d4a;
 }
+
+/*autocomplete start*/
+.autocomplete-list {
+  position: absolute;
+  top: 2.12em;
+  z-index: 2;
+
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  max-height: 8em;
+  width: 14em;
+  padding: 0.5em;
+
+  gap: 0.3em;
+
+  background-color: #666f88;
+  border: 2px solid #ffffff;
+  border-top: none;
+  border-radius: 0 0 1em 1em;
+
+  overflow: auto;
+}
+
+.autocomplete-list_visible {
+  display: flex;
+}
+
+.autocomplete-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  gap: 1em;
+
+  font-size: 0.8em;
+}
+
+.autocomplete-list__item:hover {
+  background-color: #3a3d4a;
+}
+
+.autocomplete-text-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.autocomplete-buttons-wrapper {
+  display: flex;
+  align-items: center;
+
+  gap: 1em;
+}
+
+.autocomplete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  min-width: 1.5em;
+  align-self: center;
+  padding: 0.2em;
+
+  cursor: pointer;
+}
+
+.autocomplete-button__icon {
+  width: 1em;
+  height: 1em;
+}
+
+.autocomplete-button:hover .autocomplete-button__icon {
+  fill: #4b5162;
+}
+
+.search_active {
+  border-radius: 1em 1em 0 0;
+}
+
+.selected-skill__button {
+  display: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay_visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.form-specs__selected-skills {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.5em;
+}
+
+.selected-skill {
+  min-width: auto;
+
+  font-size: 0.8em;
+}
+
+.selected-skill_included {
+  border: 2px solid #08aa05;
+}
+
+.selected-skill_excluded {
+  border: 2px solid #e00a0a;
+}
+/*autocomplete end*/
 
 /*576-767.98*/
 @media (max-width: 767.98px) {
