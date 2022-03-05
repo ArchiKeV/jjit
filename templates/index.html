@@ -25,41 +25,43 @@
   <form class="form-refresh" action="/refresh">
     <button class="button">Refresh vacancy list</button>
   </form>
-  <form class="form-specs" method="get" action="/vacancy_list">
-    <fieldset class="form-specs__fieldset">
-      <legend class="form-specs__legend">Specialisations:</legend>
-      <div class="form-specs__wrapper">
-        {% for input_value in specs_list %}
-        <label class="form-specs__label">
-          <input class="form-specs__input" type="checkbox" name="spec" value="{{ input_value }}">{{ input_value }}
-        </label>
-        {% endfor %}
-      </div>
-      <div class="form-specs__buttons">
-        <button class="button" type="reset">Reset</button>
-        <button class="button" type="submit">Go</button>
-      </div>
-    </fieldset>
-  </form>
-  <form class="form-specs" id="searchForm" method="get" action="/vacancy_list">
-    <fieldset class="form-specs__fieldset">
-      <legend class="form-specs__legend">Search by skills:</legend>
-      <p class="form-specs__prompt">Click "+" to include the skill to the search, click "-" to exclude the skill from the search. Click on a skill to remove it from the search.</p>
-      <div class="form-specs__selected-skills"></div>
-      <div class="form-specs__search-wrapper">
-        <label>
-          <input class="form-specs__search" type="search" placeholder="Search" autocomplete="off">
-        </label>
-        <ul class="form-specs__autocomplete-container autocomplete-list" >
-        </ul>
-        <div class="overlay"></div>
-      </div>
-      <div class="form-specs__buttons">
-        <button class="button" type="reset">Reset</button>
-        <button class="button" type="submit">Go</button>
-      </div>
-    </fieldset>
-  </form>
+  <div class="forms-wrapper">
+    <form class="form-specs" method="get" action="/vacancy_list">
+      <fieldset class="form-specs__fieldset">
+        <legend class="form-specs__legend">Specialisations:</legend>
+        <div class="form-specs__wrapper">
+          {% for input_value in specs_list %}
+          <label class="form-specs__label">
+            <input class="form-specs__input" type="checkbox" name="spec" value="{{ input_value }}">{{ input_value }}
+          </label>
+          {% endfor %}
+        </div>
+        <div class="form-specs__buttons">
+          <button class="button" type="reset">Reset</button>
+          <button class="button" type="submit">Go</button>
+        </div>
+      </fieldset>
+    </form>
+    <form class="form-specs" id="searchForm" method="get" action="/vacancy_list">
+      <fieldset class="form-specs__fieldset">
+        <legend class="form-specs__legend">Search by skills:</legend>
+        <p class="form-specs__prompt">Click "+" to include the skill to the search, click "-" to exclude the skill from the search. Click on a skill to remove it from the search.</p>
+        <div class="form-specs__selected-skills"></div>
+        <div class="form-specs__search-wrapper">
+          <label>
+            <input class="form-specs__search" type="search" placeholder="Search" autocomplete="off">
+          </label>
+          <ul class="form-specs__autocomplete-container autocomplete-list" >
+          </ul>
+          <div class="overlay"></div>
+        </div>
+        <div class="form-specs__buttons">
+          <button class="button" type="reset">Reset</button>
+          <button class="button" type="submit">Go</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </main>
 <footer class="footer">
   <p class="footer__text">Powered by: <a
