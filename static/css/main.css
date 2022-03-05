@@ -67,6 +67,7 @@ a:hover {
 
 .main__o-list {
   list-style-type: disc;
+  padding-left: 1em;
 }
 
 .button {
@@ -113,6 +114,7 @@ a:hover {
 
 .form-specs {
   min-width: 50%;
+  height: 100%;
 }
 
 .form-specs__fieldset {
@@ -411,12 +413,17 @@ a:hover {
   }
 
   .table-wrapper {
+    justify-content: flex-start;
     max-width: 700px;
     width: 100%;
 
     overflow: auto;
 
     transform: scaleY(-1);
+  }
+
+  .table-wrapper-vacancy {
+    justify-content: center;
   }
 
   .table {
