@@ -318,8 +318,10 @@ async def vacancy_list(
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
-            conditions = and_(*conditions)
-            list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
+            if len(conditions) > 1:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
+            else:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
