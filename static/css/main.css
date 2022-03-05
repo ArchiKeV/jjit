@@ -65,6 +65,10 @@ a:hover {
   text-align: center;
 }
 
+.main__o-list {
+  list-style-type: disc;
+}
+
 .button {
   min-width: 8em;
   padding: 0.1em 1em;

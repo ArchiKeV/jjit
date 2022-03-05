@@ -28,11 +28,23 @@
   <h1 class="main__title">{{ vacancy['title'] }}</h1>
   <h2 class="main__subtitle">Company: <a href="/vacancy_list?company={{ vacancy.company_name }}">{{ vacancy.company_name }}</a></h2>
   {% if vacancy.company_url %}
-    <h2 class="main__subtitle"><a href="{{ vacancy.company_url }}">External link</a></h2>
+    <h2 class="main__subtitle"><a
+        href="{{ vacancy.company_url }}"
+        target="_blank"
+        rel="noreferrer"
+    >Company site link</a></h2>
   {% endif %}
   <h2 class="main__subtitle">Address: {{ vacancy.address_text }}</h2>
   <h2 class="main__subtitle">Company size: {{ vacancy.company_size }}</h2>
-  <h2 class="main__subtitle">About vacancy: Specialisation - {{ vacancy.specialization }}, Work type - {{ vacancy.workplace_type }}, Exp level - {{ vacancy.experience_level }}, Interview remote - {{ vacancy.remote_interview }}, Published datetime - {{ vacancy.published_at }}, Remote work - {{ vacancy.remote_work }}</h2>
+  <h2 class="main__subtitle">About vacancy: </h2>
+  <ol class="main__o-list">
+    <li>Specialisation: <b>{{ vacancy.specialization }}</b></li>
+    <li>Work type: <b>{{ vacancy.workplace_type }}</b></li>
+    <li>Exp level: <b>{{ vacancy.experience_level }}</b></li>
+    <li>Interview remote: <b>{{ vacancy.remote_interview }}</b></li>
+    <li>Published datetime: <b>{{ vacancy.published_at }}</b></li>
+    <li>Remote work: <b>{{ vacancy.remote_work }}</b></li>
+  </ol>
   {% if vacancy.salary_permanent %}
     <h2 class="main__subtitle">Salary permanent: {{ vacancy.salary_permanent }}</h2>
   {% endif %}
