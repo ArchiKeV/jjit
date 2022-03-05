@@ -104,7 +104,7 @@ a:hover {
   align-items: center;
   justify-content: center;
 
-  gap: 1em;
+  gap: 2em;
 }
 
 .form-specs {
@@ -115,7 +115,8 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  height: 100%;
 
   gap: 2em;
 
@@ -387,7 +388,11 @@ a:hover {
 /*1200+*/
 @media (min-width: 1199.98px) {
   .forms-wrapper {
-    flex-direction: row;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 1em;
   }
 }
 
