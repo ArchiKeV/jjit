@@ -57,7 +57,7 @@ export class Autocomplete {
         if (searchValue === '') {
             Autocomplete.containerClearAndHide();
         } else {
-            const filteredNames = Autocomplete.names.filter((v, i) => {
+            const filteredNames = Autocomplete.names.filter((v) => {
                 const skill = v.name;
                 if (skill) {
                     return (skill.toLowerCase().includes(searchValue));
