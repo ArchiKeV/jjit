@@ -275,31 +275,22 @@ async def vacancy_list(
         skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None)
 ):
     global path_with_query
-    global unique_skills
+    list_of_vacancy = []
+    conditions = []
     with session.begin() as ses:
-        if spec and not company and not skill_on_id:
+        if spec:
             global spec_list
             spec_list = spec
-            list_of_vacancy = []
-            if spec_list:
-                vac_with_specs = [
-                    ses.query(Vacancy).filter(Vacancy.specialization.contains(spec)).all() for spec in spec_list
-                ]
-                for vac_spec in vac_with_specs:
-                    list_of_vacancy.extend(vac_spec)
-        elif company and not spec and not skill_on_id:
-            list_of_vacancy = []
-            vac_with_company = [
-                ses.query(Vacancy).filter(Vacancy.company_name.contains(comp)).all() for comp in company
-            ]
-            for vac_company in vac_with_company:
-                list_of_vacancy.extend(vac_company)
+            sub_conditions = or_(Vacancy.specialization.contains(sp) for sp in spec)
+            conditions.append(sub_conditions)
+        if company:
+            sub_conditions = or_(Vacancy.company_name.contains(comp) for comp in company)
+            conditions.append(sub_conditions)
         elif (skill_on_id or skill_off_id) and not company and not spec:
-            list_of_vacancy = []
+            global unique_skills
             vacancy_skills_attr = [
                 x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
             ]
-            conditions = []
             if skill_on_id:
                 for skill_id in skill_on_id:
                     sub_conditions = []
@@ -318,10 +309,10 @@ async def vacancy_list(
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
-            if len(conditions) > 1:
-                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
-            else:
-                list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
+        if len(conditions) == 1:
+            list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
+        elif len(conditions) > 1:
+            list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
