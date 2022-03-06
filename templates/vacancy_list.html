@@ -30,6 +30,10 @@
       <tr>
         <th class="table__th">ID ({{ vac_len }})</th>
         <th class="table__th">Company name</th>
+        <th class="table__th">Country code, City</th>
+        <th class="table__th">Spec</th>
+        <th class="table__th">Remote Interview</th>
+        <th class="table__th">Remote Work</th>
         <th class="table__th">Comment</th>
         <th class="table__th">Rate</th>
       </tr>
@@ -43,6 +47,10 @@
         <td class="table__td">
           <a class="link" href="/vacancy_list?company={{ vacancy.company_name }}">{{ vacancy.company_name }}</a>
         </td>
+        <td class="table__td">{{ vacancy.country_code }}, {{ vacancy.city }}</td>
+        <td class="table__td">{{ vacancy.specialization }}</td>
+        <td class="table__td">{{ vacancy.remote_interview }}</td>
+        <td class="table__td">{{ vacancy.remote_work }}</td>
         <td class="table__td">{{ vacancy.comment }}</td>
         <td class="table__td">{{ vacancy.rate }}</td>
       </tr>
