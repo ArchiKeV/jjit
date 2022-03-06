@@ -267,7 +267,7 @@ def get_company_list_with_repeat_num():
             else:
                 raw_company_list[company[0]] += 1
         for num, (company_name, company_num) in enumerate(raw_company_list.items()):
-            company_list.append({"company_name": company_name, "num": company_num, "id": num})
+            company_list.append({"name": company_name, "num": company_num, "id": num})
 
 
 get_skills_list_with_repet_num()
