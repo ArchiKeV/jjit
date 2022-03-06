@@ -254,7 +254,24 @@ def get_skills_list_with_repet_num():
             unique_skills.append({"name": skill_name, "num": skill_num, "id": num})
 
 
+company_list = []
+
+
+def get_company_list_with_repeat_num():
+    global company_list
+    raw_company_list = {}
+    with session.begin() as ses:
+        for company in ses.query(Vacancy.company_name).filter(Vacancy.company_name.is_not(None)).all():
+            if not raw_company_list.get(company[0], False):
+                raw_company_list.update({company[0]: 1})
+            else:
+                raw_company_list[company[0]] += 1
+        for num, (company_name, company_num) in enumerate(raw_company_list.items()):
+            company_list.append({"company_name": company_name, "num": company_num, "id": num})
+
+
 get_skills_list_with_repet_num()
+get_company_list_with_repeat_num()
 
 
 @app.get("/refresh")
@@ -262,6 +279,7 @@ async def vacancy_refresh():
     list_of_vacancy = load_vacancy_list()
     write_vac_list_to_db(list_of_vacancy)
     get_skills_list_with_repet_num()
+    get_company_list_with_repeat_num()
     return RedirectResponse(url=app.url_path_for("home_page"))
 
 
@@ -272,7 +290,7 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None)
+        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None), country: List[str] = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -286,7 +304,7 @@ async def vacancy_list(
         if company:
             sub_conditions = or_(Vacancy.company_name.contains(comp) for comp in company)
             conditions.append(sub_conditions)
-        elif (skill_on_id or skill_off_id) and not company and not spec:
+        if skill_on_id or skill_off_id:
             global unique_skills
             vacancy_skills_attr = [
                 x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
@@ -309,6 +327,16 @@ async def vacancy_list(
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
+        print(country)
+        if country:
+            sub_conditions = []
+            for cntr in country:
+                if cntr == 'None':
+                    sub_conditions.append(Vacancy.country_code.is_(None))
+                else:
+                    sub_conditions.append(Vacancy.country_code.contains(cntr))
+            sub_conditions = or_(*sub_conditions)
+            conditions.append(sub_conditions)
         if len(conditions) == 1:
             list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
         elif len(conditions) > 1:
@@ -369,10 +397,11 @@ async def home_page(request: Request):
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
+        country_list = [x[0] for x in ses.query(Vacancy.country_code.distinct()).all()]
     return templates.TemplateResponse(
         "index.html",
         {
-            "request": request, "vac_num": vacancy_count, "specs_list": specs_list
+            "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "country_list": country_list
         }
     )
 
@@ -381,6 +410,12 @@ async def home_page(request: Request):
 async def api_skills():
     global unique_skills
     return unique_skills
+
+
+@app.get("/api/companies")
+async def api_companies():
+    global company_list
+    return company_list
 
 
 if __name__ == '__main__':
