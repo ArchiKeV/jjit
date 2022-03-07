@@ -270,8 +270,23 @@ def get_company_list_with_repeat_num():
             company_list.append({"name": company_name, "num": company_num, "id": num})
 
 
+salary_dict = {}
+
+
+def get_salary_list_with_repeat_num():
+    global salary_dict
+    with session.begin() as ses:
+        mandate_count = ses.query(Vacancy.salary_mandate).filter(Vacancy.salary_mandate.is_not(None)).count()
+        salary_dict.update({"mandate": mandate_count})
+        b2b_count = ses.query(Vacancy.salary_b2b).filter(Vacancy.salary_b2b.is_not(None)).count()
+        salary_dict.update({"b2b": b2b_count})
+        permanent_count = ses.query(Vacancy.salary_permanent).filter(Vacancy.salary_permanent.is_not(None)).count()
+        salary_dict.update({"permanent": permanent_count})
+
+
 get_skills_list_with_repet_num()
 get_company_list_with_repeat_num()
+get_salary_list_with_repeat_num()
 
 
 @app.get("/refresh")
@@ -280,6 +295,7 @@ async def vacancy_refresh():
     write_vac_list_to_db(list_of_vacancy)
     get_skills_list_with_repet_num()
     get_company_list_with_repeat_num()
+    get_salary_list_with_repeat_num()
     return RedirectResponse(url=app.url_path_for("home_page"))
 
 
@@ -290,7 +306,8 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None), country: List[str] = Query(None)
+        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None), country: List[str] = Query(None),
+        salary_type: List[str] = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -327,7 +344,6 @@ async def vacancy_list(
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
-        print(country)
         if country:
             sub_conditions = []
             for cntr in country:
@@ -335,6 +351,12 @@ async def vacancy_list(
                     sub_conditions.append(Vacancy.country_code.is_(None))
                 else:
                     sub_conditions.append(Vacancy.country_code.contains(cntr))
+            sub_conditions = or_(*sub_conditions)
+            conditions.append(sub_conditions)
+        if salary_type:
+            sub_conditions = []
+            for s_type in salary_type:
+                sub_conditions.append(getattr(Vacancy, f'salary_{s_type}').is_not(None))
             sub_conditions = or_(*sub_conditions)
             conditions.append(sub_conditions)
         if len(conditions) == 1:
@@ -394,6 +416,7 @@ async def vacancy(request: Request, vac_id: str = None):
 
 @app.get("/")
 async def home_page(request: Request):
+    global salary_dict
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
@@ -401,7 +424,8 @@ async def home_page(request: Request):
     return templates.TemplateResponse(
         "index.html",
         {
-            "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "country_list": country_list
+            "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "country_list": country_list,
+            "salary_dict": salary_dict
         }
     )
 
