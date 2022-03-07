@@ -74,6 +74,22 @@
         </div>
       </fieldset>
     </form>
+    <form class="form-specs" method="get" action="/vacancy_list">
+      <fieldset class="form-specs__fieldset">
+        <legend class="form-specs__legend">Workplace type:</legend>
+        <div class="form-specs__wrapper">
+          {% for input_value in workplace_type_list %}
+          <label class="form-specs__label">
+            <input class="form-specs__input" type="checkbox" name="workplace_type" value="{{ input_value }}">{{ input_value }}
+          </label>
+          {% endfor %}
+        </div>
+        <div class="form-specs__buttons">
+          <button class="button" type="reset">Reset</button>
+          <button class="button" type="submit">Go</button>
+        </div>
+      </fieldset>
+    </form>
     <form class="form-specs" id="searchForm" method="get" action="/vacancy_list">
       <fieldset class="form-specs__fieldset">
         <legend class="form-specs__legend">Search by skills:</legend>
