@@ -64,21 +64,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="form-specs__fieldset" id="searchForm">
-          <legend class="form-specs__legend">Search by skills:</legend>
-          <p class="form-specs__prompt">Click "+" to include the skill to the search, click "-" to exclude the skill
-            from
-            the search. Click on a skill to remove it from the search.</p>
-          <div class="form-specs__hidden-inputs"></div>
-          <div class="form-specs__selected-skills"></div>
-          <div class="form-specs__search-wrapper">
-            <label>
-              <input class="form-specs__search" type="search" placeholder="Search" autocomplete="off">
-            </label>
-            <ul class="form-specs__autocomplete-container autocomplete-list">
-            </ul>
-            <div class="overlay"></div>
-          </div>
+        <fieldset class="form-specs__fieldset" id="searchFormSkills">
         </fieldset>
 
 
@@ -108,6 +94,9 @@
             </label>
             {% endfor %}
           </div>
+        </fieldset>
+
+        <fieldset class="form-specs__fieldset" id="searchFormCompanies">
         </fieldset>
 
 

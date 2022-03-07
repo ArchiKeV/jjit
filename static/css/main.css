@@ -359,7 +359,7 @@ a:hover {
   border-radius: 1em 1em 0 0;
 }
 
-.selected-skill__button {
+.selected-name__button {
   display: none;
 }
 
@@ -380,7 +380,7 @@ a:hover {
   opacity: 1;
 }
 
-.form-specs__selected-skills {
+.form-specs__selected-names {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -388,17 +388,17 @@ a:hover {
   gap: 0.5em;
 }
 
-.selected-skill {
+.selected-name {
   min-width: auto;
 
   font-size: 0.8em;
 }
 
-.selected-skill_included {
+.selected-name_included {
   border: 2px solid #08aa05;
 }
 
-.selected-skill_excluded {
+.selected-name_excluded {
   border: 2px solid #e00a0a;
 }
 
@@ -434,7 +434,7 @@ a:hover {
   }
 
   .form-wrapper {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .first-column,
