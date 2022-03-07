@@ -290,11 +290,13 @@ country_list = []
 def get_country_dict_with_repeat_num():
     global country_list
     with session.begin() as ses:
+        county_none = []
         for country in ses.query(Vacancy.country_code.distinct()).all():
             if country[0] is None:
-                country_list.append('Country not specified')
+                county_none.append('Country not specified')
             else:
                 country_list.append(country[0])
+        country_list.extend(county_none)
 
 
 workplace_type_list = []
