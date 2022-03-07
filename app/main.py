@@ -239,6 +239,7 @@ unique_skills = []
 
 def get_skills_list_with_repeat_num():
     global unique_skills
+    unique_skills = []
     raw_unique_skills = {}
     with session.begin() as ses:
         vacancy_skills_attr = [
@@ -259,6 +260,7 @@ company_list = []
 
 def get_company_list_with_repeat_num():
     global company_list
+    company_list = []
     raw_company_list = {}
     with session.begin() as ses:
         for company in ses.query(Vacancy.company_name).filter(Vacancy.company_name.is_not(None)).all():
@@ -289,6 +291,7 @@ country_list = []
 
 def get_country_dict_with_repeat_num():
     global country_list
+    country_list = []
     with session.begin() as ses:
         county_none = []
         for country in ses.query(Vacancy.country_code.distinct()).all():
@@ -304,6 +307,7 @@ workplace_type_list = []
 
 def get_workplace_type_list_with_repeat_num():
     global workplace_type_list
+    workplace_type_list = []
     with session.begin() as ses:
         for w_type in ses.query(Vacancy.workplace_type.distinct()).all():
             workplace_type_list.append(w_type[0])
