@@ -251,7 +251,7 @@ def get_skills_list_with_repeat_num():
                 else:
                     raw_unique_skills[skill[0]] += 1
         for num, (skill_name, skill_num) in enumerate(raw_unique_skills.items()):
-            unique_skills.append({"name": skill_name, "num": skill_num, "id": num})
+            unique_skills.append({"name": skill_name, "num": skill_num, "id": f's{num}'})
 
 
 company_list = []
@@ -347,7 +347,7 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None), country: List[str] = Query(None),
+        skill_on_id: List[str] = Query(None), skill_off_id: List[str] = Query(None), country: List[str] = Query(None),
         salary_type: List[str] = Query(None), workplace_type: List[str] = Query(None),
         remote_interview: List[bool] = Query(None)
 ):
@@ -374,7 +374,7 @@ async def vacancy_list(
                     sub_conditions = []
                     for skill_attr in vacancy_skills_attr:
                         sub_conditions.append(
-                            getattr(Vacancy, skill_attr).contains(unique_skills[skill_id]["name"])
+                            getattr(Vacancy, skill_attr).contains(unique_skills[int(skill_id[1:])]["name"])
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
@@ -383,7 +383,7 @@ async def vacancy_list(
                     sub_conditions = []
                     for skill_attr in vacancy_skills_attr:
                         sub_conditions.append(
-                            not_(getattr(Vacancy, skill_attr).contains(unique_skills[skill_id]["name"]))
+                            not_(getattr(Vacancy, skill_attr).contains(unique_skills[int(skill_id[1:])]["name"]))
                         )
                     sub_conditions = or_(*sub_conditions)
                     conditions.append(sub_conditions)
