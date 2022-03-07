@@ -284,9 +284,23 @@ def get_salary_list_with_repeat_num():
         salary_dict.update({"permanent": permanent_count})
 
 
+country_list = []
+
+
+def get_country_dict_with_repeat_num():
+    global country_list
+    with session.begin() as ses:
+        for country in ses.query(Vacancy.country_code.distinct()).all():
+            if country[0] is None:
+                country_list.append('Country not specified')
+            else:
+                country_list.append(country[0])
+
+
 get_skills_list_with_repet_num()
 get_company_list_with_repeat_num()
 get_salary_list_with_repeat_num()
+get_country_dict_with_repeat_num()
 
 
 @app.get("/refresh")
@@ -296,6 +310,7 @@ async def vacancy_refresh():
     get_skills_list_with_repet_num()
     get_company_list_with_repeat_num()
     get_salary_list_with_repeat_num()
+    get_country_dict_with_repeat_num()
     return RedirectResponse(url=app.url_path_for("home_page"))
 
 
@@ -347,7 +362,7 @@ async def vacancy_list(
         if country:
             sub_conditions = []
             for cntr in country:
-                if cntr == 'None':
+                if cntr == 'Country not specified':
                     sub_conditions.append(Vacancy.country_code.is_(None))
                 else:
                     sub_conditions.append(Vacancy.country_code.contains(cntr))
@@ -403,6 +418,7 @@ async def vacancy(request: Request, vac_id: str = None):
             }
             for key in list_of_skill_keys if vacancy_dict.get(key, False)
         ]
+        get_skills_list_with_repet_num()
         return templates.TemplateResponse(
             "vacancy.html",
             {
@@ -417,10 +433,10 @@ async def vacancy(request: Request, vac_id: str = None):
 @app.get("/")
 async def home_page(request: Request):
     global salary_dict
+    global country_list
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
-        country_list = [x[0] for x in ses.query(Vacancy.country_code.distinct()).all()]
     return templates.TemplateResponse(
         "index.html",
         {
