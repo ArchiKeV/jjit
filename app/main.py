@@ -307,11 +307,22 @@ def get_workplace_type_list_with_repeat_num():
             workplace_type_list.append(w_type[0])
 
 
+remote_interview_list = []
+
+
+def get_interview_type_list_with_repeat_num():
+    global remote_interview_list
+    with session.begin() as ses:
+        for r_i_tf in ses.query(Vacancy.remote_interview.distinct()).all():
+            remote_interview_list.append(r_i_tf[0])
+
+
 get_skills_list_with_repeat_num()
 get_company_list_with_repeat_num()
 get_salary_list_with_repeat_num()
 get_country_dict_with_repeat_num()
 get_workplace_type_list_with_repeat_num()
+get_interview_type_list_with_repeat_num()
 
 
 @app.get("/refresh")
@@ -323,6 +334,7 @@ async def vacancy_refresh():
     get_salary_list_with_repeat_num()
     get_country_dict_with_repeat_num()
     get_workplace_type_list_with_repeat_num()
+    get_interview_type_list_with_repeat_num()
     return RedirectResponse(url=app.url_path_for("home_page"))
 
 
@@ -334,7 +346,8 @@ path_with_query = ''
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
         skill_on_id: List[int] = Query(None), skill_off_id: List[int] = Query(None), country: List[str] = Query(None),
-        salary_type: List[str] = Query(None), workplace_type: List[str] = Query(None)
+        salary_type: List[str] = Query(None), workplace_type: List[str] = Query(None),
+        remote_interview: List[bool] = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -390,6 +403,12 @@ async def vacancy_list(
             sub_conditions = []
             for w_type in workplace_type:
                 sub_conditions.append(Vacancy.workplace_type.is_(w_type))
+            sub_conditions = or_(*sub_conditions)
+            conditions.append(sub_conditions)
+        if remote_interview:
+            sub_conditions = []
+            for r_i_tf in remote_interview:
+                sub_conditions.append(Vacancy.remote_interview.is_(bool(r_i_tf)))
             sub_conditions = or_(*sub_conditions)
             conditions.append(sub_conditions)
         if len(conditions) == 1:
@@ -453,6 +472,7 @@ async def home_page(request: Request):
     global salary_dict
     global country_list
     global workplace_type_list
+    global remote_interview_list
     with session.begin() as ses:
         vacancy_count = ses.query(Vacancy).count()
         specs_list = [x[0] for x in ses.query(Vacancy.specialization.distinct()).all()]
@@ -460,7 +480,8 @@ async def home_page(request: Request):
         "index.html",
         {
             "request": request, "vac_num": vacancy_count, "specs_list": specs_list, "country_list": country_list,
-            "salary_dict": salary_dict, "workplace_type_list": workplace_type_list
+            "salary_dict": salary_dict, "workplace_type_list": workplace_type_list,
+            "remote_interview_list": remote_interview_list
         }
     )
 
