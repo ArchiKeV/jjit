@@ -5,10 +5,17 @@ export class Autocomplete {
         this.changeFinalList = this.changeFinalList.bind(this);
         this.filterForNames = this.filterForNames.bind(this);
         this.closeContainer = this.closeContainer.bind(this);
-        this.deleteSkillWithEvent = this.deleteSkillWithEvent.bind(this);
+        this.deleteNameWithEvent = this.deleteNameWithEvent.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.clearAll = this.clearAll.bind(this);
+        this.createHTML = this.createHTML.bind(this);
     }
+
+    formName = '';
+
+    excludedFieldName = '';
+
+    includedFieldName = '';
 
     names;
 
@@ -16,14 +23,26 @@ export class Autocomplete {
 
     excluded = [];
 
-    setSkills(names) {
+    setNames(names) {
         this.names = [...names];
     }
 
+    setFormName(name) {
+        this.formName = name;
+    }
+
+    setExFieldName(name) {
+        this.excludedFieldName = name;
+    }
+
+    setInFieldName(name) {
+        this.includedFieldName = name;
+    }
+
     containerClearAndHide() {
-        const autocompleteContainer = document.querySelector('.autocomplete-list');
-        const searchInput = document.querySelector('.form-specs__search');
-        const overlay = document.querySelector('.overlay');
+        const autocompleteContainer = document.getElementById(`autocompleteList${this.formName}`);
+        const searchInput = document.getElementById(`searchInput${this.formName}`);
+        const overlay = document.getElementById(`overlay${this.formName}`);
 
         autocompleteContainer.classList.remove('autocomplete-list_visible');
         searchInput.classList.remove('search_active');
@@ -32,8 +51,8 @@ export class Autocomplete {
     }
 
     renderNames(arrayOfNames) {
-        const autocompleteContainer = document.querySelector('.autocomplete-list');
-        const searchInput = document.querySelector('.form-specs__search');
+        const autocompleteContainer = document.getElementById(`autocompleteList${this.formName}`);
+        const searchInput = document.getElementById(`searchInput${this.formName}`);
         autocompleteContainer.classList.add('autocomplete-list_visible');
         searchInput.classList.add('search_active');
 
@@ -61,15 +80,15 @@ export class Autocomplete {
 
     filterForNames(event) {
         const searchValue = event.target.value.toLowerCase();
-        const overlay = document.querySelector('.overlay');
+        const overlay = document.getElementById(`overlay${this.formName}`);
 
         if (searchValue === '') {
             this.containerClearAndHide();
         } else {
             const filteredNames = this.names.filter((v) => {
-                const skill = v.name;
-                if (skill) {
-                    return (skill.toLowerCase().includes(searchValue));
+                const name = v.name;
+                if (name) {
+                    return (name.toLowerCase().includes(searchValue));
                 }
             });
 
@@ -84,116 +103,114 @@ export class Autocomplete {
     }
 
     changeFinalList(event) {
-        const searchInput = document.querySelector('.form-specs__search');
+        const searchInput = document.getElementById(`searchInput${this.formName}`);
         searchInput.focus();
 
-
         if (event.target.closest('.autocomplete-button')) {
-            const selectedSkillsElement = document.querySelector('.form-specs__selected-skills');
-            const hiddenInputsElement = document.querySelector('.form-specs__hidden-inputs');
+            const selectedNamesElement = document.getElementById(`selectedNames${this.formName}`);
+            const hiddenInputsElement = document.getElementById(`hiddenInputs${this.formName}`);
 
-            const skillId = Number(event
+            const nameId = event
                 .target
                 .closest('.autocomplete-list__item')
-                .getAttribute('data-name'));
+                .getAttribute('data-name');
 
-            const skillObject = this.names.find((skill) => {
-                return skill.id === skillId;
+            const nameObject = this.names.find((name) => {
+                return name.id === nameId;
             });
 
             if (event.target.closest('#autocomplete-add')) {
-                if (!this.isSkillContained(skillId, true)
-                    && !this.isSkillContained(skillId, false)) {
-                    this.included.push(skillObject);
-                } else if (!this.isSkillContained(skillId, true)
-                    && this.isSkillContained(skillId, false)) {
-                    this.included.push(skillObject);
+                if (!this.isNameContained(nameId, true)
+                    && !this.isNameContained(nameId, false)) {
+                    this.included.push(nameObject);
+                } else if (!this.isNameContained(nameId, true)
+                    && this.isNameContained(nameId, false)) {
+                    this.included.push(nameObject);
 
-                    const skillIndex = this.excluded.findIndex(skill => skill.id === skillId);
+                    const skillIndex = this.excluded.findIndex(skill => skill.id === nameId);
                     this.excluded.splice(skillIndex, 1);
-                    this.deleteSkillWithIndex(skillId, false);
-                    this.deleteSkillInput(skillId, false);
+                    this.deleteNameWithIndex(nameId, false);
+                    this.deleteNameInput(nameId, false);
                 }
             } else if (event.target.closest('#autocomplete-remove')) {
-                if (!this.isSkillContained(skillId, false)
-                    && !this.isSkillContained(skillId, true)) {
-                    this.excluded.push(skillObject);
-                } else if (!this.isSkillContained(skillId, false)
-                    && this.isSkillContained(skillId, true)) {
-                    this.excluded.push(skillObject);
+                if (!this.isNameContained(nameId, false)
+                    && !this.isNameContained(nameId, true)) {
+                    this.excluded.push(nameObject);
+                } else if (!this.isNameContained(nameId, false)
+                    && this.isNameContained(nameId, true)) {
+                    this.excluded.push(nameObject);
 
-                    const skillIndex = this.included.findIndex(skill => skill.id === skillId);
-                    this.included.splice(skillIndex, 1);
-                    this.deleteSkillWithIndex(skillId, true);
-                    this.deleteSkillInput(skillId, true);
+                    const nameIndex = this.included.findIndex(name => name.id === nameId);
+                    this.included.splice(nameIndex, 1);
+                    this.deleteNameWithIndex(nameId, true);
+                    this.deleteNameInput(nameId, true);
                 }
             }
 
-            let skills = '';
+            let names = '';
             let inputs = '';
 
-            this.included.forEach((skill) => {
-                skills += `
+            this.included.forEach((name) => {
+                names += `
                     <button 
-                      class="button selected-skill selected-skill_included" 
-                      data-name=${skill.id}
+                      class="button selected-name selected-name_included" 
+                      data-name=${name.id}
                       type="button"
-                    >${skill.name}</button>
+                    >${name.name}</button>
                 `
             });
 
-            this.excluded.forEach((skill) => {
-                skills += `
+            this.excluded.forEach((name) => {
+                names += `
                     <button 
-                      class="button selected-skill selected-skill_excluded" 
-                      data-name=${skill.id}
+                      class="button selected-name selected-name_excluded" 
+                      data-name=${name.id}
                       type="button"
-                    >${skill.name}</button>
+                    >${name.name}</button>
                 `
             });
 
-            this.included.forEach((skill) => {
+            this.included.forEach((name) => {
                 inputs += `
                     <input 
                       class="hidden-input_included"
-                      name="skill_on_id" 
-                      data-name=${skill.id}
+                      name=${this.includedFieldName} 
+                      data-name=${name.id}
                       type="checkbox"
-                      value=${skill.id}
+                      value=${name.id}
                       checked
                     />
                 `
             });
 
-            this.excluded.forEach((skill) => {
+            this.excluded.forEach((name) => {
                 inputs += `
                     <input 
                       class="hidden-input_excluded" 
-                      name="skill_off_id"
-                      data-name=${skill.id}
+                      name=${this.excludedFieldName} 
+                      data-name=${name.id}
                       type="checkbox"
-                      value=${skill.id}
+                      value=${name.id}
                       checked
                     />
                 `
             });
 
-            selectedSkillsElement.innerHTML = skills;
+            selectedNamesElement.innerHTML = names;
             hiddenInputsElement.innerHTML = inputs;
         }
     }
 
-    isSkillContained(skillId, included) {
+    isNameContained(nameId, included) {
         if (included) {
-            return this.included.some(skill => skill.id === skillId);
+            return this.included.some(name => name.id === nameId);
         } else {
-            return this.excluded.some(skill => skill.id === skillId);
+            return this.excluded.some(name => name.id === nameId);
         }
-
     }
 
     closeContainer(event) {
-        const searchInput = document.querySelector('.form-specs__search');
+        const searchInput = document.getElementById(`searchInput${this.formName}`);
         event.target.classList.remove('overlay_visible');
 
         searchInput.blur();
@@ -201,68 +218,70 @@ export class Autocomplete {
 
     }
 
-    deleteSkillWithEvent(event) {
-        if (event.target.classList.contains('selected-skill')) {
-            if (event.target.classList.contains('selected-skill_included')) {
-                const skillIndex = this.included.findIndex(skill => skill.id === Number(event.target.getAttribute('data-name')));
-                if (skillIndex !== -1) {
-                    this.included.splice(skillIndex, 1);
+    deleteNameWithEvent(event) {
+        if (event.target.classList.contains('selected-name')) {
+            if (event.target.classList.contains('selected-name_included')) {
+                const nameIndex = this.included.findIndex(name => name.id === event.target.getAttribute('data-name'));
+                const nameId = event.target.getAttribute('data-name');
+                if (nameIndex !== -1) {
+                    this.included.splice(nameIndex, 1);
                     event.target.remove();
-                    this.deleteSkillInput(skillIndex, true);
+                    this.deleteNameInput(nameId, true);
                 }
-            } else if (event.target.classList.contains('selected-skill_excluded')) {
-                const skillIndex = this.excluded.findIndex(skill => skill.id === Number(event.target.getAttribute('data-name')));
-                if (skillIndex !== -1) {
-                    this.excluded.splice(skillIndex, 1);
+            } else if (event.target.classList.contains('selected-name_excluded')) {
+                const nameIndex = this.excluded.findIndex(name => name.id === event.target.getAttribute('data-name'));
+                const nameId = event.target.getAttribute('data-name');
+                if (nameIndex !== -1) {
+                    this.excluded.splice(nameIndex, 1);
                     event.target.remove();
-                    this.deleteSkillInput(skillIndex, false);
+                    this.deleteNameInput(nameId, false);
                 }
             }
         }
     }
 
-    deleteSkillWithIndex(skillId, included) {
+    deleteNameWithIndex(nameId, included) {
         if (included) {
-            const skillElement = document.querySelector(`.selected-skill_included[data-name="${skillId}"]`);
-            skillElement.remove();
+            const nameElement = document.querySelector(`.selected-name_included[data-name="${nameId}"]`);
+            nameElement.remove();
         } else {
-            const skillElement = document.querySelector(`.selected-skill_excluded[data-name="${skillId}"]`);
-            skillElement.remove();
+            const nameElement = document.querySelector(`.selected-name_excluded[data-name="${nameId}"]`);
+            nameElement.remove();
         }
     }
 
-    deleteSkillInput(skillId, included) {
+    deleteNameInput(nameId, included) {
         if (included) {
-            const skillElement = document.querySelector(`.hidden-input_included[data-name="${skillId}"]`);
-            skillElement.remove();
+            const nameElement = document.querySelector(`.hidden-input_included[data-name="${nameId}"]`);
+            nameElement.remove();
         } else {
-            const skillElement = document.querySelector(`.hidden-input_excluded[data-name="${skillId}"]`);
-            skillElement.remove();
+            const nameElement = document.querySelector(`.hidden-input_excluded[data-name="${nameId}"]`);
+            nameElement.remove();
         }
     }
 
     async submitForm(event) {
         event.preventDefault();
 
-        let skillOnData = [];
-        let skillOffData = [];
+        let nameOnData = [];
+        let nameOffData = [];
 
-        this.included.forEach((skill) => {
-            skillOnData.push(skill.id);
+        this.included.forEach((name) => {
+            nameOnData.push(name.id);
         });
 
-        this.excluded.forEach((skill) => {
-            skillOffData.push(skill.id);
+        this.excluded.forEach((name) => {
+            nameOffData.push(name.id);
         });
 
         const formData = [];
 
-        skillOnData.forEach((id) => {
-            formData.push(['skill_on_id', id]);
+        nameOnData.forEach((id) => {
+            formData.push([this.includedFieldName, id]);
         })
 
-        skillOffData.forEach((id) => {
-            formData.push(['skill_off_id', id]);
+        nameOffData.forEach((id) => {
+            formData.push([this.excludedFieldName, id]);
         })
 
         const params = this.encodeQueryDataArray(formData);
@@ -278,24 +297,45 @@ export class Autocomplete {
     }
 
     clearAll() {
-        const selectedSkillElement = document.querySelector('.form-specs__selected-skills');
-        const hiddenInputsElement = document.querySelector('.form-specs__hidden-inputs');
+        const selectedSkillElement = document.getElementById(`selectedNames${this.formName}`);
+        const hiddenInputsElement = document.getElementById(`hiddenInputs${this.formName}`);
         selectedSkillElement.innerHTML = '';
         hiddenInputsElement.innerHTML = '';
         this.included = [];
         this.excluded = [];
     }
 
+    createHTML() {
+        const searchFieldset = document.getElementById(`searchForm${this.formName}`);
+
+        searchFieldset.innerHTML = `
+          <legend class="form-specs__legend">Search by ${this.formName}:</legend>
+          <p class="form-specs__prompt">Click "+" to include the name to the search, click "-" to exclude the name
+            from
+            the search. Click on a name to remove it from the search.</p>
+          <div class="form-specs__hidden-inputs" id="hiddenInputs${this.formName}"></div>
+          <div class="form-specs__selected-names" id="selectedNames${this.formName}"></div>
+          <div class="form-specs__search-wrapper">
+            <label>
+              <input class="form-specs__search" type="search" placeholder="Search" autocomplete="off" id="searchInput${this.formName}">
+            </label>
+            <ul class="form-specs__autocomplete-container autocomplete-list" id="autocompleteList${this.formName}">
+            </ul>
+            <div class="overlay" id="overlay${this.formName}"></div>
+          </div>
+        `;
+    }
+
     startAutocomplete() {
-        const searchInput = document.querySelector('.form-specs__search');
-        const overlay = document.querySelector('.overlay');
-        const selectedSkillElement = document.querySelector('.form-specs__selected-skills');
+        const searchInput = document.getElementById(`searchInput${this.formName}`);
+        const overlay = document.getElementById(`overlay${this.formName}`);
+        const selectedSkillElement = document.getElementById(`selectedNames${this.formName}`);
         const searchForm = document.querySelector('.form-specs');
 
         searchInput.addEventListener('input', this.filterForNames);
         searchInput.addEventListener('focus', this.filterForNames);
         overlay.addEventListener('click', this.closeContainer);
-        selectedSkillElement.addEventListener('click', this.deleteSkillWithEvent);
+        selectedSkillElement.addEventListener('click', this.deleteNameWithEvent);
         searchForm.addEventListener('reset', this.clearAll);
     }
 }
