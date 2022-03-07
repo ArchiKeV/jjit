@@ -267,7 +267,7 @@ def get_company_list_with_repeat_num():
             else:
                 raw_company_list[company[0]] += 1
         for num, (company_name, company_num) in enumerate(raw_company_list.items()):
-            company_list.append({"name": company_name, "num": company_num, "id": num})
+            company_list.append({"name": company_name, "num": company_num, "id": f'c{num}'})
 
 
 salary_dict = {}
@@ -361,7 +361,8 @@ async def vacancy_list(
             sub_conditions = or_(Vacancy.specialization.contains(sp) for sp in spec)
             conditions.append(sub_conditions)
         if company:
-            sub_conditions = or_(Vacancy.company_name.contains(comp) for comp in company)
+            global company_list
+            sub_conditions = or_(Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company)
             conditions.append(sub_conditions)
         if skill_on_id or skill_off_id:
             global unique_skills
