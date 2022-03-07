@@ -389,6 +389,21 @@ a:hover {
 .form-specs__prompt {
   text-align: center;
 }
+
+.form-specs__hidden-inputs {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+
+  overflow: hidden;
+
+  border: 0;
+
+  clip: rect(0 0 0 0);
+}
 /*autocomplete end*/
 
 /*1200+*/
