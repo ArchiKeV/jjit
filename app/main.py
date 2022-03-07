@@ -237,7 +237,7 @@ def write_vac_to_db(vac_dict, vac: Vacancy):
 unique_skills = []
 
 
-def get_skills_list_with_repet_num():
+def get_skills_list_with_repeat_num():
     global unique_skills
     raw_unique_skills = {}
     with session.begin() as ses:
@@ -297,7 +297,7 @@ def get_country_dict_with_repeat_num():
                 country_list.append(country[0])
 
 
-get_skills_list_with_repet_num()
+get_skills_list_with_repeat_num()
 get_company_list_with_repeat_num()
 get_salary_list_with_repeat_num()
 get_country_dict_with_repeat_num()
@@ -307,7 +307,7 @@ get_country_dict_with_repeat_num()
 async def vacancy_refresh():
     list_of_vacancy = load_vacancy_list()
     write_vac_list_to_db(list_of_vacancy)
-    get_skills_list_with_repet_num()
+    get_skills_list_with_repeat_num()
     get_company_list_with_repeat_num()
     get_salary_list_with_repeat_num()
     get_country_dict_with_repeat_num()
@@ -418,7 +418,7 @@ async def vacancy(request: Request, vac_id: str = None):
             }
             for key in list_of_skill_keys if vacancy_dict.get(key, False)
         ]
-        get_skills_list_with_repet_num()
+        get_skills_list_with_repeat_num()
         return templates.TemplateResponse(
             "vacancy.html",
             {
