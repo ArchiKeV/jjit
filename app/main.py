@@ -371,22 +371,19 @@ async def vacancy_list(
             ]
             if skill_on_id:
                 for skill_id in skill_on_id:
-                    sub_conditions = []
-                    for skill_attr in vacancy_skills_attr:
-                        sub_conditions.append(
-                            getattr(Vacancy, skill_attr).contains(unique_skills[int(skill_id[1:])]["name"])
-                        )
-                    sub_conditions = or_(*sub_conditions)
-                    conditions.append(sub_conditions)
+                    skill = unique_skills[int(skill_id[1:])]["name"]
+                    conditions.append(or_(
+                        getattr(Vacancy, skill_attr).contains(skill) for skill_attr in vacancy_skills_attr
+                    ))
             if skill_off_id:
                 for skill_id in skill_off_id:
-                    sub_conditions = []
-                    for skill_attr in vacancy_skills_attr:
-                        sub_conditions.append(
-                            not_(getattr(Vacancy, skill_attr).contains(unique_skills[int(skill_id[1:])]["name"]))
-                        )
-                    sub_conditions = or_(*sub_conditions)
-                    conditions.append(sub_conditions)
+                    skill = unique_skills[int(skill_id[1:])]["name"]
+                    conditions.append(and_(
+                        or_(
+                            ~getattr(Vacancy, skill_attr).contains(skill),
+                            getattr(Vacancy, skill_attr).is_(None)
+                        ) for skill_attr in vacancy_skills_attr
+                    ))
         if country:
             sub_conditions = []
             for cntr in country:
