@@ -290,7 +290,7 @@ export class Autocomplete {
         const searchInput = document.querySelector('.form-specs__search');
         const overlay = document.querySelector('.overlay');
         const selectedSkillElement = document.querySelector('.form-specs__selected-skills');
-        const searchForm = document.getElementById('searchForm');
+        const searchForm = document.querySelector('.form-specs');
 
         searchInput.addEventListener('input', this.filterForNames);
         searchInput.addEventListener('focus', this.filterForNames);
