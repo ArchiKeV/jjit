@@ -351,6 +351,7 @@ path_with_query = ''
 @app.get("/vacancy_list")
 async def vacancy_list(
         request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
+        company_on_id: List[str] = Query(None), company_off_id: List[str] = Query(None),
         skill_on_id: List[str] = Query(None), skill_off_id: List[str] = Query(None), country: List[str] = Query(None),
         salary_type: List[str] = Query(None), workplace_type: List[str] = Query(None),
         remote_interview: List[bool] = Query(None)
@@ -365,9 +366,18 @@ async def vacancy_list(
             sub_conditions = or_(Vacancy.specialization.contains(sp) for sp in spec)
             conditions.append(sub_conditions)
         if company:
+            conditions.append(or_(Vacancy.company_name.is_(cmp) for cmp in company))
+        if company_on_id or company_off_id:
             global company_list
-            sub_conditions = or_(Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company)
-            conditions.append(sub_conditions)
+            if company_on_id:
+                sub_conditions = or_(
+                    Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company_on_id
+                )
+                conditions.append(sub_conditions)
+            if company_off_id:
+                conditions.append(and_(or_(
+                    ~Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company_on_id
+                )))
         if skill_on_id or skill_off_id:
             global unique_skills
             vacancy_skills_attr = [
