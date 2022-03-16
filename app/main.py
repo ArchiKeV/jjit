@@ -318,6 +318,7 @@ remote_interview_list = []
 
 def get_interview_type_list_with_repeat_num():
     global remote_interview_list
+    remote_interview_list = []
     with session.begin() as ses:
         for r_i_tf in ses.query(Vacancy.remote_interview.distinct()).all():
             remote_interview_list.append(r_i_tf[0])
