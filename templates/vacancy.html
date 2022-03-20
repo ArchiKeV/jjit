@@ -26,7 +26,7 @@
 </header>
 <main class="main">
   <h1 class="main__title">{{ vacancy['title'] }}</h1>
-  <h2 class="main__subtitle">Company: <a href="/vacancy_list?company={{ vacancy.company_name }}">{{ vacancy.company_name }}</a></h2>
+  <h2 class="main__subtitle">Company: <a href="/vacancy_list?company_on={{ vacancy.company_name }}">{{ vacancy.company_name }}</a></h2>
   {% if vacancy.company_url %}
     <h2 class="main__subtitle"><a
         href="{{ vacancy.company_url }}"
