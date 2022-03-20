@@ -367,29 +367,31 @@ async def vacancy_list(
             sub_conditions = or_(Vacancy.specialization.contains(sp) for sp in spec)
             conditions.append(sub_conditions)
         if company_on or company_off:
+            from urllib.parse import unquote
             if company_on:
                 sub_conditions = or_(
-                    Vacancy.company_name.is_(comp) for comp in company_on
+                    Vacancy.company_name.is_(unquote(comp)) for comp in company_on
                 )
                 conditions.append(sub_conditions)
             if company_off:
                 conditions.append(and_(or_(
-                    ~Vacancy.company_name.is_(comp) for comp in company_off
+                    ~Vacancy.company_name.is_(unquote(comp)) for comp in company_off
                 )))
         if skill_on or skill_off:
+            from urllib.parse import unquote
             vacancy_skills_attr = [
                 x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
             ]
             if skill_on:
                 for skill in skill_on:
                     conditions.append(or_(
-                        getattr(Vacancy, skill_attr).is_(skill) for skill_attr in vacancy_skills_attr
+                        getattr(Vacancy, skill_attr).is_(unquote(skill)) for skill_attr in vacancy_skills_attr
                     ))
             if skill_off:
                 for skill in skill_off:
                     conditions.append(and_(
                         or_(
-                            ~getattr(Vacancy, skill_attr).is_(skill),
+                            ~getattr(Vacancy, skill_attr).is_(unquote(skill)),
                             getattr(Vacancy, skill_attr).is_(None)
                         ) for skill_attr in vacancy_skills_attr
                     ))
