@@ -351,11 +351,11 @@ path_with_query = ''
 
 @app.get("/vacancy_list")
 async def vacancy_list(
-        request: Request, spec: List[str] = Query(None), company: List[str] = Query(None),
-        company_on_id: List[str] = Query(None), company_off_id: List[str] = Query(None),
-        skill_on_id: List[str] = Query(None), skill_off_id: List[str] = Query(None), country: List[str] = Query(None),
-        salary_type: List[str] = Query(None), workplace_type: List[str] = Query(None),
-        remote_interview: List[bool] = Query(None)
+        request: Request, spec: List[str] = Query(None),
+        company_on: List[str] = Query(None), company_off: List[str] = Query(None),
+        skill_on: List[str] = Query(None), skill_off: List[str] = Query(None),
+        country: List[str] = Query(None), salary_type: List[str] = Query(None),
+        workplace_type: List[str] = Query(None), remote_interview: List[bool] = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -366,36 +366,32 @@ async def vacancy_list(
             spec_list = spec
             sub_conditions = or_(Vacancy.specialization.contains(sp) for sp in spec)
             conditions.append(sub_conditions)
-        if company:
-            conditions.append(or_(Vacancy.company_name.is_(cmp) for cmp in company))
-        if company_on_id or company_off_id:
-            global company_list
-            if company_on_id:
+        if company_on or company_off:
+            from urllib.parse import unquote
+            if company_on:
                 sub_conditions = or_(
-                    Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company_on_id
+                    Vacancy.company_name.is_(unquote(comp)) for comp in company_on
                 )
                 conditions.append(sub_conditions)
-            if company_off_id:
+            if company_off:
                 conditions.append(and_(or_(
-                    ~Vacancy.company_name.contains(company_list[int(comp[1:])]['name']) for comp in company_on_id
+                    Vacancy.company_name.is_not(unquote(comp)) for comp in company_off
                 )))
-        if skill_on_id or skill_off_id:
-            global unique_skills
+        if skill_on or skill_off:
+            from urllib.parse import unquote
             vacancy_skills_attr = [
                 x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
             ]
-            if skill_on_id:
-                for skill_id in skill_on_id:
-                    skill = unique_skills[int(skill_id[1:])]["name"]
+            if skill_on:
+                for skill in skill_on:
                     conditions.append(or_(
-                        getattr(Vacancy, skill_attr).contains(skill) for skill_attr in vacancy_skills_attr
+                        getattr(Vacancy, skill_attr).is_(unquote(skill)) for skill_attr in vacancy_skills_attr
                     ))
-            if skill_off_id:
-                for skill_id in skill_off_id:
-                    skill = unique_skills[int(skill_id[1:])]["name"]
+            if skill_off:
+                for skill in skill_off:
                     conditions.append(and_(
                         or_(
-                            ~getattr(Vacancy, skill_attr).contains(skill),
+                            getattr(Vacancy, skill_attr).is_not(unquote(skill)),
                             getattr(Vacancy, skill_attr).is_(None)
                         ) for skill_attr in vacancy_skills_attr
                     ))

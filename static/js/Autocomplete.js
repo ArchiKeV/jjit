@@ -9,6 +9,7 @@ export class Autocomplete {
         this.submitForm = this.submitForm.bind(this);
         this.clearAll = this.clearAll.bind(this);
         this.createHTML = this.createHTML.bind(this);
+        this.visaCompaniesHandler = this.visaCompaniesHandler.bind(this);
     }
 
     formName = '';
@@ -22,6 +23,8 @@ export class Autocomplete {
     included = [];
 
     excluded = [];
+
+    visaNames;
 
     setNames(names) {
         this.names = [...names];
@@ -37,6 +40,10 @@ export class Autocomplete {
 
     setInFieldName(name) {
         this.includedFieldName = name;
+    }
+
+    setVisaNames(names) {
+        this.visaNames = [...names];
     }
 
     containerClearAndHide() {
@@ -107,9 +114,6 @@ export class Autocomplete {
         searchInput.focus();
 
         if (event.target.closest('.autocomplete-button')) {
-            const selectedNamesElement = document.getElementById(`selectedNames${this.formName}`);
-            const hiddenInputsElement = document.getElementById(`hiddenInputs${this.formName}`);
-
             const nameId = event
                 .target
                 .closest('.autocomplete-list__item')
@@ -127,8 +131,8 @@ export class Autocomplete {
                     && this.isNameContained(nameId, false)) {
                     this.included.push(nameObject);
 
-                    const skillIndex = this.excluded.findIndex(skill => skill.id === nameId);
-                    this.excluded.splice(skillIndex, 1);
+                    const nameIndex = this.excluded.findIndex(skill => skill.id === nameId);
+                    this.excluded.splice(nameIndex, 1);
                     this.deleteNameWithIndex(nameId, false);
                     this.deleteNameInput(nameId, false);
                 }
@@ -147,58 +151,64 @@ export class Autocomplete {
                 }
             }
 
-            let names = '';
-            let inputs = '';
+            this.createInputsAndButtonsForSearch();
+        }
+    }
 
-            this.included.forEach((name) => {
-                names += `
+    createInputsAndButtonsForSearch() {
+        const selectedNamesElement = document.getElementById(`selectedNames${this.formName}`);
+        const hiddenInputsElement = document.getElementById(`hiddenInputs${this.formName}`);
+
+        let names = '';
+        let inputs = '';
+
+        this.included.forEach((name) => {
+            names += `
                     <button 
                       class="button selected-name selected-name_included" 
                       data-name=${name.id}
                       type="button"
                     >${name.name}</button>
                 `
-            });
+        });
 
-            this.excluded.forEach((name) => {
-                names += `
+        this.excluded.forEach((name) => {
+            names += `
                     <button 
                       class="button selected-name selected-name_excluded" 
                       data-name=${name.id}
                       type="button"
                     >${name.name}</button>
                 `
-            });
+        });
 
-            this.included.forEach((name) => {
-                inputs += `
+        this.included.forEach((name) => {
+            inputs += `
                     <input 
                       class="hidden-input_included"
                       name=${this.includedFieldName} 
                       data-name=${name.id}
                       type="checkbox"
-                      value=${name.id}
+                      value=${encodeURIComponent(name.name)}
                       checked
-                    />
+                    >
                 `
-            });
+        });
 
-            this.excluded.forEach((name) => {
-                inputs += `
+        this.excluded.forEach((name) => {
+            inputs += `
                     <input 
                       class="hidden-input_excluded" 
                       name=${this.excludedFieldName} 
                       data-name=${name.id}
                       type="checkbox"
-                      value=${name.id}
+                      value=${encodeURIComponent(name.name)}
                       checked
                     />
                 `
-            });
-
-            selectedNamesElement.innerHTML = names;
-            hiddenInputsElement.innerHTML = inputs;
-        }
+        });
+        selectedNamesElement.innerHTML = names;
+        hiddenInputsElement.innerHTML = inputs;
     }
 
     isNameContained(nameId, included) {
@@ -337,5 +347,71 @@ export class Autocomplete {
         overlay.addEventListener('click', this.closeContainer);
         selectedSkillElement.addEventListener('click', this.deleteNameWithEvent);
         searchForm.addEventListener('reset', this.clearAll);
+    }
+
+    changeVisaCompanies(deleteCompanies) {
+        let filteredNames = [];
+
+        this.visaNames.forEach((name) => {
+            const filteredNamesTemp = this.names.filter((v) => {
+                if (v.name) {
+                    return (v.name.toLowerCase() === (name.toLowerCase()));
+                }
+            });
+            filteredNamesTemp.forEach((x) => {
+                filteredNames.push(x);
+            })
+        });
+
+        if (deleteCompanies) {
+            filteredNames.forEach((name) => {
+                if (this.isNameContained(name.id, true)) {
+                    const nameIndex = this.included.findIndex(skill => skill.id === name.id);
+                    this.included.splice(nameIndex, 1);
+                    this.deleteNameWithIndex(name.id, true);
+                    this.deleteNameInput(name.id, true);
+                }
+            });
+        } else {
+            filteredNames.forEach((name) => {
+                if (!this.isNameContained(name.id, true)) {
+                    this.included.push(name);
+                }
+            });
+        }
+
+        this.createInputsAndButtonsForSearch();
+    }
+
+    visaCompaniesHandler(event) {
+        if (!event.target.classList.contains('form-specs__createVisaCompanies_delete')) {
+            this.changeVisaCompanies(false);
+            this.switchVisaCompaniesButton(event.target, false);
+        } else {
+            this.changeVisaCompanies(true);
+            this.switchVisaCompaniesButton(event.target, true);
+        }
+    }
+
+    switchVisaCompaniesButton(buttonElement, deleteCompanies) {
+        if (deleteCompanies) {
+            buttonElement.classList.remove('form-specs__createVisaCompanies_delete');
+            buttonElement.innerText = 'Add visa PBH companies';
+        } else {
+            buttonElement.classList.add('form-specs__createVisaCompanies_delete');
+            buttonElement.innerText = 'Delete visa PBH companies';
+        }
+    }
+
+    createVisaCompaniesButton() {
+        const searchFormCompanies = document.getElementById('searchFormCompanies');
+
+        const visaCompaniesButton = document.createElement('button');
+        visaCompaniesButton.className = 'button form-specs__createVisaCompanies';
+        visaCompaniesButton.innerText = 'Add visa PBH companies';
+        visaCompaniesButton.type = 'button';
+        searchFormCompanies.appendChild(visaCompaniesButton);
+
+        visaCompaniesButton.addEventListener('click', this.visaCompaniesHandler);
     }
 }
