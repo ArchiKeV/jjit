@@ -375,7 +375,7 @@ async def vacancy_list(
                 conditions.append(sub_conditions)
             if company_off:
                 conditions.append(and_(or_(
-                    ~Vacancy.company_name.is_(unquote(comp)) for comp in company_off
+                    Vacancy.company_name.is_not(unquote(comp)) for comp in company_off
                 )))
         if skill_on or skill_off:
             from urllib.parse import unquote
@@ -391,7 +391,7 @@ async def vacancy_list(
                 for skill in skill_off:
                     conditions.append(and_(
                         or_(
-                            ~getattr(Vacancy, skill_attr).is_(unquote(skill)),
+                            getattr(Vacancy, skill_attr).is_not(unquote(skill)),
                             getattr(Vacancy, skill_attr).is_(None)
                         ) for skill_attr in vacancy_skills_attr
                     ))
