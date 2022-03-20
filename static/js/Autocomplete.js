@@ -355,7 +355,7 @@ export class Autocomplete {
         this.visaNames.forEach((name) => {
             const filteredNamesTemp = this.names.filter((v) => {
                 if (v.name) {
-                    return (v.name.toLowerCase().includes(name.toLowerCase()));
+                    return (v.name.toLowerCase() === (name.toLowerCase()));
                 }
             });
             filteredNamesTemp.forEach((x) => {
@@ -379,7 +379,6 @@ export class Autocomplete {
                 }
             });
         }
-
 
         this.createInputsAndButtonsForSearch();
     }
