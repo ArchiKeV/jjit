@@ -1,6 +1,7 @@
 /*
 !README
 !/app/main.py
+!/app/pbh_companies.py
 !/static/css/main.css
 !/static/css/reset.css
 !/templates/index.html
