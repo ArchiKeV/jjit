@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import List
 import uvicorn
 
+from pbh_companies import pbh_companies
+
 # DB configuration
 db_path = "jjit.db.sqlite"
 base = declarative_base()
@@ -507,6 +509,11 @@ async def api_skills():
 async def api_companies():
     global company_list
     return company_list
+
+
+@app.get("/api/pbh_companies")
+async def api_pbh_companies():
+    return pbh_companies
 
 
 if __name__ == '__main__':

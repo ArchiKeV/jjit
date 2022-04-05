@@ -1,4 +1,4 @@
-export const companiesVisa = [
+pbh_companies = [
     '00 Cloud',
     '10Clouds',
     '11Sigma',
@@ -491,4 +491,4 @@ export const companiesVisa = [
     'YONDER MEDIA MOBILE POLAND SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
     'Zendesk',
     'ZENTALY'
-];
+]
