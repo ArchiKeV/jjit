@@ -1,6 +1,5 @@
 import {Autocomplete} from './Autocomplete.js';
 import ServerApi from './ServerApi.js';
-import {companiesVisa} from './companiesVisa.js';
 
 const autocompleteSkills = new Autocomplete();
 autocompleteSkills.setFormName('Skills');
@@ -22,5 +21,6 @@ const skills = await ServerApi.getSkills();
 autocompleteSkills.setNames(skills);
 autocompleteSkills.startAutocomplete();
 
-autocompleteCompanies.setVisaNames(companiesVisa);
+const pbhCompanies = await ServerApi.getPbhCompanies();
+autocompleteCompanies.setVisaNames(pbhCompanies);
 autocompleteCompanies.createVisaCompaniesButton();
