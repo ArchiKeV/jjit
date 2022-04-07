@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="title" content="JJIT parser">
-  <meta name="description"
-        content="JJIT parser">
+{% extends "main.html" %}
 
-  <title>Vacancy - {{ vacancy['id'] }}</title>
+{% block title %}
+<title>Vacancy - {{ vacancy['id'] }}</title>
+{% endblock %}
 
-  <link rel="apple-touch-icon" sizes="180x180" href="./../static/assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./../static/assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./../static/assets/favicon/favicon-16x16.png">
-  <link rel="manifest" href="./../static/assets/favicon/site.webmanifest">
-
-  <link href="{{ url_for('static', path='/css/reset.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
-</head>
-<body class="body">
+{% block content %}
 <header class="header">
   <a class="button" id="back" href="/{{ path_with_query }}"> < Back </a>
   <a class="button" href="/">Main page</a>
@@ -74,19 +59,4 @@
   </div>
   <div>{{ vacancy['description']|safe }}</div>
 </main>
-<footer class="footer">
-  <p class="footer__text">Powered by: <a
-      class="link footer__link"
-      href="https://github.com/ArchiKeV"
-      target="_blank"
-      rel="noreferrer"
-  >ArchiKeV</a></p>
-  <p class="footer__text">Front-end: <a
-      class="link footer__link"
-      href="https://github.com/AmidaWolf"
-      target="_blank"
-      rel="noreferrer"
-  >AmidaWolf</a></p>
-</footer>
-</body>
-</html>
+{% endblock %}
