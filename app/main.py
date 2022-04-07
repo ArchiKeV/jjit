@@ -15,17 +15,20 @@ import uvicorn
 
 from pbh_companies import pbh_companies
 
+# Main configuration
+base_path = Path(__file__).parent.parent.absolute()
+
 # DB configuration
 db_path = "jjit.db.sqlite"
 base = declarative_base()
-engine = create_engine(f'sqlite:///{db_path}', echo=True)
+engine = create_engine(f'sqlite:///{base_path / db_path}', echo=True)
 
 # FastAPI configuration
-templates = Jinja2Templates(directory=Path(__file__).parent.parent.absolute() / "templates")
+templates = Jinja2Templates(directory=base_path / "templates")
 app = FastAPI()
 app.mount(
     "/static",
-    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "static"),
+    StaticFiles(directory=base_path / "static"),
     name="static",
 )
 
