@@ -19,45 +19,95 @@
         {% set ulr_for_sort = "/vacancy_list?" %}
       {% endif %}
       <tr>
-        <th class="table__th">ID ({{ vac_len }})
-          <a class="button" href="{{ulr_for_sort}}sort_asc=title">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=title">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>ID ({{ vac_len }})</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=title" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=title" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Company name
-          <a class="button" href="{{ulr_for_sort}}sort_asc=company_name">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=company_name">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Company name</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=company_name" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=company_name" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Country code
-          <a class="button" href="{{ulr_for_sort}}sort_asc=country_code">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=country_code">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Country code</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=country_code" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=country_code" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">City
-          <a class="button" href="{{ulr_for_sort}}sort_asc=city">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=city">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>City</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=city" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=city" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Spec
-          <a class="button" href="{{ulr_for_sort}}sort_asc=specialization">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=specialization">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Spec</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=specialization" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=specialization" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Remote Interview
-          <a class="button" href="{{ulr_for_sort}}sort_asc=remote_interview">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=remote_interview">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Remote Interview</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=remote_interview" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=remote_interview" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Workplace
-          <a class="button" href="{{ulr_for_sort}}sort_asc=workplace_type">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=workplace_type">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Workplace</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=workplace_type" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=workplace_type" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Rate
-          <a class="button" href="{{ulr_for_sort}}sort_asc=rate">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=rate">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Rate</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=rate" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=rate" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Publication date
-          <a class="button" href="{{ulr_for_sort}}sort_asc=published_at">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=published_at">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Publication date</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=published_at" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=published_at" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
-        <th class="table__th">Status
-          <a class="button" href="{{ulr_for_sort}}sort_asc=status">↓</a>
-          <a class="button" href="{{ulr_for_sort}}sort_desc=status">↑</a>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Status</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=status" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=status" title="sort by desc"></a>
+            </div>
+          </div>
         </th>
       </tr>
       </thead>
@@ -70,14 +120,14 @@
         <td class="table__td">
           <a class="link" href="/vacancy_list?company_on={{ vacancy.company_name }}">{{ vacancy.company_name }}</a>
         </td>
-        <td class="table__td">{{ vacancy.country_code }}</td>
-        <td class="table__td">{{ vacancy.city }}</td>
-        <td class="table__td">{{ vacancy.specialization }}</td>
-        <td class="table__td">{{ vacancy.remote_interview }}</td>
-        <td class="table__td">{{ vacancy.workplace_type }}</td>
-        <td class="table__td">{{ vacancy.rate }}</td>
-        <td class="table__td">{{ vacancy.published_at }}</td>
-        <td class="table__td">{{ vacancy.status }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.country_code }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.city }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.specialization }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.remote_interview }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.workplace_type }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.rate }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.published_at }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.status }}</td>
       </tr>
       {% endfor %}
       </tbody>
