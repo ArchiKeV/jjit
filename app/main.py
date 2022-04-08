@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_, and_, or_
+from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_, and_, or_, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.session import sessionmaker
 
@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Query
 from pathlib import Path
 from typing import List
+from enum import Enum
 import uvicorn
 
 from pbh_companies import pbh_companies
@@ -120,6 +121,19 @@ class Vacancy(base):
 
 base.metadata.create_all(engine)
 session = sessionmaker(bind=engine)
+
+
+class SortName(str, Enum):
+    title = "title"
+    company_name = "company_name"
+    city = "city"
+    country_code = "country_code"
+    specialization = "specialization"
+    remote_interview = "remote_interview"
+    workplace_type = "workplace_type"
+    rate = "rate"
+    published_at = "published_at"
+    status = "status"
 
 
 def load_vacancy_list():
@@ -360,7 +374,8 @@ async def vacancy_list(
         company_on: List[str] = Query(None), company_off: List[str] = Query(None),
         skill_on: List[str] = Query(None), skill_off: List[str] = Query(None),
         country: List[str] = Query(None), salary_type: List[str] = Query(None),
-        workplace_type: List[str] = Query(None), remote_interview: List[bool] = Query(None)
+        workplace_type: List[str] = Query(None), remote_interview: List[bool] = Query(None),
+        sort_asc: SortName = Query(None), sort_desc: SortName = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -427,19 +442,33 @@ async def vacancy_list(
                 sub_conditions.append(Vacancy.remote_interview.is_(bool(r_i_tf)))
             sub_conditions = or_(*sub_conditions)
             conditions.append(sub_conditions)
-        if len(conditions) == 1:
-            list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
-        elif len(conditions) > 1:
-            list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
+        if len(conditions) > 0:
+            if sort_asc:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).order_by(
+                    getattr(Vacancy, sort_asc)
+                ).all())
+            elif sort_desc:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).order_by(
+                    desc(getattr(Vacancy, sort_desc))
+                ).all())
+            else:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
+        if "sort_asc" in request.url.query:
+            query_without_sort = request.url.remove_query_params("sort_asc").query
+        elif "sort_desc" in request.url.query:
+            query_without_sort = request.url.remove_query_params("sort_desc").query
+        else:
+            query_without_sort = request.url.query
         return templates.TemplateResponse(
             "vacancy_list.html",
             {
                 "request": request,
                 "list_of_vacancy": list_of_vacancy,
-                "vac_len": len(list_of_vacancy)
+                "vac_len": len(list_of_vacancy),
+                "query_without_sort": query_without_sort
             }
         )
 
