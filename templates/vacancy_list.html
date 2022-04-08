@@ -13,16 +13,52 @@
     {% if list_of_vacancy %}
     <table class="table">
       <thead class="table__header">
+      {% if query_without_sort %}
+        {% set ulr_for_sort = "/vacancy_list?"+query_without_sort+"&" %}
+      {% else %}
+        {% set ulr_for_sort = "/vacancy_list?" %}
+      {% endif %}
       <tr>
-        <th class="table__th">ID ({{ vac_len }})</th>
-        <th class="table__th">Company name</th>
-        <th class="table__th">Country code, City</th>
-        <th class="table__th">Spec</th>
-        <th class="table__th">Remote Interview</th>
-        <th class="table__th">Workplace</th>
-        <th class="table__th">Rate</th>
-        <th class="table__th">Publication date</th>
-        <th class="table__th">Status</th>
+        <th class="table__th">ID ({{ vac_len }})
+          <a class="button" href="{{ulr_for_sort}}sort_asc=title">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=title">↑</a>
+        </th>
+        <th class="table__th">Company name
+          <a class="button" href="{{ulr_for_sort}}sort_asc=company_name">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=company_name">↑</a>
+        </th>
+        <th class="table__th">Country code
+          <a class="button" href="{{ulr_for_sort}}sort_asc=country_code">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=country_code">↑</a>
+        </th>
+        <th class="table__th">City
+          <a class="button" href="{{ulr_for_sort}}sort_asc=city">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=city">↑</a>
+        </th>
+        <th class="table__th">Spec
+          <a class="button" href="{{ulr_for_sort}}sort_asc=specialization">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=specialization">↑</a>
+        </th>
+        <th class="table__th">Remote Interview
+          <a class="button" href="{{ulr_for_sort}}sort_asc=remote_interview">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=remote_interview">↑</a>
+        </th>
+        <th class="table__th">Workplace
+          <a class="button" href="{{ulr_for_sort}}sort_asc=workplace_type">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=workplace_type">↑</a>
+        </th>
+        <th class="table__th">Rate
+          <a class="button" href="{{ulr_for_sort}}sort_asc=rate">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=rate">↑</a>
+        </th>
+        <th class="table__th">Publication date
+          <a class="button" href="{{ulr_for_sort}}sort_asc=published_at">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=published_at">↑</a>
+        </th>
+        <th class="table__th">Status
+          <a class="button" href="{{ulr_for_sort}}sort_asc=status">↓</a>
+          <a class="button" href="{{ulr_for_sort}}sort_desc=status">↑</a>
+        </th>
       </tr>
       </thead>
       <tbody class="table__body">
@@ -34,7 +70,8 @@
         <td class="table__td">
           <a class="link" href="/vacancy_list?company_on={{ vacancy.company_name }}">{{ vacancy.company_name }}</a>
         </td>
-        <td class="table__td">{{ vacancy.country_code }}, {{ vacancy.city }}</td>
+        <td class="table__td">{{ vacancy.country_code }}</td>
+        <td class="table__td">{{ vacancy.city }}</td>
         <td class="table__td">{{ vacancy.specialization }}</td>
         <td class="table__td">{{ vacancy.remote_interview }}</td>
         <td class="table__td">{{ vacancy.workplace_type }}</td>
