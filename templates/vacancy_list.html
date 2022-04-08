@@ -21,6 +21,8 @@
         <th class="table__th">Remote Interview</th>
         <th class="table__th">Workplace</th>
         <th class="table__th">Rate</th>
+        <th class="table__th">Publication date</th>
+        <th class="table__th">Status</th>
       </tr>
       </thead>
       <tbody class="table__body">
@@ -37,6 +39,8 @@
         <td class="table__td">{{ vacancy.remote_interview }}</td>
         <td class="table__td">{{ vacancy.workplace_type }}</td>
         <td class="table__td">{{ vacancy.rate }}</td>
+        <td class="table__td">{{ vacancy.published_at }}</td>
+        <td class="table__td">{{ vacancy.status }}</td>
       </tr>
       {% endfor %}
       </tbody>
