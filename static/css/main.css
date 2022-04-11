@@ -103,6 +103,33 @@ a:hover {
   transition: all 1s;
 }
 
+.button_sort {
+  min-width: 1.3em;
+  min-height: 1.3em;
+  padding: 0.3em;
+
+  background-size: 0.7em;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.button_sort:hover {
+  text-decoration: none;
+
+  background-color: #989898;
+
+  transition: all 1s;
+}
+
+.button_down {
+  background-image: url(../assets/arrow-down.svg);
+}
+
+.button_up {
+  background-image: url(../assets/arrow-up.svg);
+}
+
 .form-specs {
   display: flex;
   justify-content: center;
@@ -266,11 +293,32 @@ a:hover {
   font-weight: bold;
 }
 
+.th-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5em;
+}
+
+.sort-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.3em;
+}
+
 .table__td {
   padding: 0.1em 0.3em;
 }
 
 .skill-td {
+  text-align: center;
+}
+
+.table__td_centered {
   text-align: center;
 }
 

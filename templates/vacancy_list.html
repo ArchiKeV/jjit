@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="title" content="JJIT parser">
-  <meta name="description"
-        content="JJIT parser">
+{% extends "main.html" %}
 
-  <title>Vacancy list</title>
+{% block title %}
+<title>Vacancy list</title>
+{% endblock %}
 
-  <link rel="apple-touch-icon" sizes="180x180" href="./../static/assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./../static/assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./../static/assets/favicon/favicon-16x16.png">
-  <link rel="manifest" href="./../static/assets/favicon/site.webmanifest">
-
-  <link href="{{ url_for('static', path='/css/reset.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
-</head>
-<body class="body">
+{% block content %}
 <header class="header">
   <a class="button" href="/">Main page</a>
 </header>
@@ -27,15 +13,98 @@
     {% if list_of_vacancy %}
     <table class="table">
       <thead class="table__header">
+      {% if query_without_sort %}
+        {% set ulr_for_sort = "/vacancy_list?"+query_without_sort+"&" %}
+      {% else %}
+        {% set ulr_for_sort = "/vacancy_list?" %}
+      {% endif %}
       <tr>
-        <th class="table__th">ID ({{ vac_len }})</th>
-        <th class="table__th">Company name</th>
-        <th class="table__th">Country code, City</th>
-        <th class="table__th">Spec</th>
-        <th class="table__th">Remote Interview</th>
-        <th class="table__th">Workplace</th>
-        <th class="table__th">Comment</th>
-        <th class="table__th">Rate</th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>ID ({{ vac_len }})</p>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Company name</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=company_name" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=company_name" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Country code</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=country_code" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=country_code" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>City</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=city" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=city" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Spec</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=specialization" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=specialization" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Remote Interview</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=remote_interview" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=remote_interview" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Workplace</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=workplace_type" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=workplace_type" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Rate</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=rate" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=rate" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Publication date</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=published_at" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=published_at" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
+            <p>Status</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=status" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=status" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
       </tr>
       </thead>
       <tbody class="table__body">
@@ -47,12 +116,14 @@
         <td class="table__td">
           <a class="link" href="/vacancy_list?company_on={{ vacancy.company_name }}">{{ vacancy.company_name }}</a>
         </td>
-        <td class="table__td">{{ vacancy.country_code }}, {{ vacancy.city }}</td>
-        <td class="table__td">{{ vacancy.specialization }}</td>
-        <td class="table__td">{{ vacancy.remote_interview }}</td>
-        <td class="table__td">{{ vacancy.workplace_type }}</td>
-        <td class="table__td">{{ vacancy.comment }}</td>
-        <td class="table__td">{{ vacancy.rate }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.country_code }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.city }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.specialization }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.remote_interview }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.workplace_type }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.rate }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.published_at.isoformat(' ', 'seconds') }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.status }}</td>
       </tr>
       {% endfor %}
       </tbody>
@@ -62,20 +133,4 @@
     {% endif %}
   </div>
 </main>
-<footer class="footer">
-  <p class="footer__text">Powered by: <a
-      class="link footer__link"
-      href="https://github.com/ArchiKeV"
-      target="_blank"
-      rel="noreferrer"
-  >ArchiKeV</a></p>
-  <p class="footer__text">Front-end: <a
-      class="link footer__link"
-      href="https://github.com/AmidaWolf"
-      target="_blank"
-      rel="noreferrer"
-  >AmidaWolf</a></p>
-</footer>
-
-</body>
-</html>
+{% endblock %}

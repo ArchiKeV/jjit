@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, String, Boolean, Integer, not_, and_, or_
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, and_, or_, desc
 from sqlalchemy.orm.session import sessionmaker
+from dateutil import parser
+from pathlib import Path
 
 import requests
 import brotli
@@ -9,111 +10,28 @@ from starlette.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Query
-from pathlib import Path
 from typing import List
 import uvicorn
 
 from pbh_companies import pbh_companies
+from classes import base, Vacancy, SortName
+
+
+# Main configuration
+base_path = Path(__file__).parent.parent.absolute()
 
 # DB configuration
 db_path = "jjit.db.sqlite"
-base = declarative_base()
-engine = create_engine(f'sqlite:///{db_path}', echo=True)
+engine = create_engine(f'sqlite:///{base_path / db_path}', echo=True)
 
 # FastAPI configuration
-templates = Jinja2Templates(directory=Path(__file__).parent.parent.absolute() / "templates")
+templates = Jinja2Templates(directory=base_path / "templates")
 app = FastAPI()
 app.mount(
     "/static",
-    StaticFiles(directory=Path(__file__).parent.parent.absolute() / "static"),
+    StaticFiles(directory=base_path / "static"),
     name="static",
 )
-
-
-class Vacancy(base):
-    __tablename__ = 'vacancy'
-    id = Column(String, primary_key=True)
-    title = Column(String)
-    title_old = Column(String)
-    description = Column(String)
-    description_old = Column(String)
-    street = Column(String)
-    street_old = Column(String)
-    city = Column(String)
-    city_old = Column(String)
-    country_code = Column(String)
-    country_code_old = Column(String)
-    address_text = Column(String)
-    address_text_old = Column(String)
-    specialization = Column(String)
-    specialization_old = Column(String)
-    workplace_type = Column(String)
-    workplace_type_old = Column(String)
-    company_name = Column(String)
-    company_name_old = Column(String)
-    company_url = Column(String)
-    company_url_old = Column(String)
-    company_size = Column(String)
-    company_size_old = Column(String)
-    experience_level = Column(String)
-    experience_level_old = Column(String)
-    published_at = Column(String)
-    published_at_old = Column(String)
-    remote_interview = Column(Boolean)
-    remote_interview_old = Column(Boolean)
-    salary_permanent = Column(String)
-    salary_permanent_old = Column(String)
-    salary_mandate = Column(String)
-    salary_mandate_old = Column(String)
-    salary_b2b = Column(String)
-    salary_b2b_old = Column(String)
-    skill_01 = Column(String)
-    skill_01_old = Column(String)
-    skill_01_level = Column(Integer)
-    skill_01_level_old = Column(Integer)
-    skill_02 = Column(String)
-    skill_02_old = Column(String)
-    skill_02_level = Column(Integer)
-    skill_02_level_old = Column(Integer)
-    skill_03 = Column(String)
-    skill_03_old = Column(String)
-    skill_03_level = Column(Integer)
-    skill_03_level_old = Column(Integer)
-    skill_04 = Column(String)
-    skill_04_old = Column(String)
-    skill_04_level = Column(Integer)
-    skill_04_level_old = Column(Integer)
-    skill_05 = Column(String)
-    skill_05_old = Column(String)
-    skill_05_level = Column(Integer)
-    skill_05_level_old = Column(Integer)
-    skill_06 = Column(String)
-    skill_06_old = Column(String)
-    skill_06_level = Column(Integer)
-    skill_06_level_old = Column(Integer)
-    skill_07 = Column(String)
-    skill_07_old = Column(String)
-    skill_07_level = Column(Integer)
-    skill_07_level_old = Column(Integer)
-    skill_08 = Column(String)
-    skill_08_old = Column(String)
-    skill_08_level = Column(Integer)
-    skill_08_level_old = Column(Integer)
-    skill_09 = Column(String)
-    skill_09_old = Column(String)
-    skill_09_level = Column(Integer)
-    skill_09_level_old = Column(Integer)
-    skill_10 = Column(String)
-    skill_10_old = Column(String)
-    skill_10_level = Column(Integer)
-    skill_10_level_old = Column(Integer)
-    remote_work = Column(Boolean)
-    remote_work_old = Column(Boolean)
-    comment = Column(String)
-    rate = Column(Integer)
-    status = Column(String)
-    open_to_hire_ukrainians = Column(Boolean)
-
 
 base.metadata.create_all(engine)
 session = sessionmaker(bind=engine)
@@ -121,7 +39,7 @@ session = sessionmaker(bind=engine)
 
 def load_vacancy_list():
     headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0',
         'Accept': 'application/json, text/plain, */*',
         'Accept-Language': 'ru',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -142,6 +60,7 @@ def load_vacancy_list():
 def write_vac_list_to_db(vac_list):
     with session() as ses:
         for vac in vac_list:
+            vac["published_at"] = parser.isoparse(vac["published_at"])
             vac['specialization'] = vac['marker_icon']
             vac.pop("marker_icon")
             vac.pop('latitude')
@@ -247,8 +166,8 @@ def get_skills_list_with_repeat_num():
         vacancy_skills_attr = [
             x for x in dir(Vacancy) if x.startswith('skill') and not x.endswith('old') and not x.endswith('level')
         ]
-        for skill_attr in vacancy_skills_attr:
-            for skill in ses.query(getattr(Vacancy, skill_attr)).filter(getattr(Vacancy, skill_attr).is_not(None)).all():
+        for sk_attr in vacancy_skills_attr:
+            for skill in ses.query(getattr(Vacancy, sk_attr)).filter(getattr(Vacancy, sk_attr).is_not(None)).all():
                 if not raw_unique_skills.get(skill[0], False):
                     raw_unique_skills.update({skill[0]: 1})
                 else:
@@ -357,7 +276,8 @@ async def vacancy_list(
         company_on: List[str] = Query(None), company_off: List[str] = Query(None),
         skill_on: List[str] = Query(None), skill_off: List[str] = Query(None),
         country: List[str] = Query(None), salary_type: List[str] = Query(None),
-        workplace_type: List[str] = Query(None), remote_interview: List[bool] = Query(None)
+        workplace_type: List[str] = Query(None), remote_interview: List[bool] = Query(None),
+        sort_asc: SortName = Query(None), sort_desc: SortName = Query(None)
 ):
     global path_with_query
     list_of_vacancy = []
@@ -424,19 +344,33 @@ async def vacancy_list(
                 sub_conditions.append(Vacancy.remote_interview.is_(bool(r_i_tf)))
             sub_conditions = or_(*sub_conditions)
             conditions.append(sub_conditions)
-        if len(conditions) == 1:
-            list_of_vacancy.extend(ses.query(Vacancy).filter(*conditions).all())
-        elif len(conditions) > 1:
-            list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
+        if len(conditions) > 0:
+            if sort_asc:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).order_by(
+                    getattr(Vacancy, sort_asc)
+                ).all())
+            elif sort_desc:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).order_by(
+                    desc(getattr(Vacancy, sort_desc))
+                ).all())
+            else:
+                list_of_vacancy.extend(ses.query(Vacancy).filter(and_(*conditions)).all())
         else:
             list_of_vacancy = ses.query(Vacancy).all()
         path_with_query = str(request.url.include_query_params()).split('/')[-1]
+        if "sort_asc" in request.url.query:
+            query_without_sort = request.url.remove_query_params("sort_asc").query
+        elif "sort_desc" in request.url.query:
+            query_without_sort = request.url.remove_query_params("sort_desc").query
+        else:
+            query_without_sort = request.url.query
         return templates.TemplateResponse(
             "vacancy_list.html",
             {
                 "request": request,
                 "list_of_vacancy": list_of_vacancy,
-                "vac_len": len(list_of_vacancy)
+                "vac_len": len(list_of_vacancy),
+                "query_without_sort": query_without_sort
             }
         )
 
