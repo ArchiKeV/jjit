@@ -122,7 +122,7 @@
         <td class="table__td table__td_centered">{{ vacancy.remote_interview }}</td>
         <td class="table__td table__td_centered">{{ vacancy.workplace_type }}</td>
         <td class="table__td table__td_centered">{{ vacancy.rate }}</td>
-        <td class="table__td table__td_centered">{{ vacancy.published_at }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.published_at.isoformat(' ', 'seconds') }}</td>
         <td class="table__td table__td_centered">{{ vacancy.status }}</td>
       </tr>
       {% endfor %}

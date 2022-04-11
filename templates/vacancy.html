@@ -27,7 +27,7 @@
     <li>Work type: <b>{{ vacancy.workplace_type }}</b></li>
     <li>Exp level: <b>{{ vacancy.experience_level }}</b></li>
     <li>Interview remote: <b>{{ vacancy.remote_interview }}</b></li>
-    <li>Published datetime: <b>{{ vacancy.published_at }}</b></li>
+    <li>Published datetime: <b>{{ vacancy.published_at.isoformat(' ', 'seconds') }}</b></li>
     <li>Remote work: <b>{{ vacancy.remote_work }}</b></li>
   </ol>
   {% if vacancy.salary_permanent %}
