@@ -4,3 +4,4 @@ Jinja2
 requests
 SQLAlchemy
 uvicorn
+python-dateutil
