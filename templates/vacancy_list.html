@@ -62,6 +62,15 @@
         </th>
         <th class="table__th">
           <div class="th-wrapper">
+            <p>Level</p>
+            <div class="sort-buttons-wrapper">
+              <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=experience_level" title="sort by asc"></a>
+              <a class="button button_sort button_up" href="{{ulr_for_sort}}sort_desc=experience_level" title="sort by desc"></a>
+            </div>
+          </div>
+        </th>
+        <th class="table__th">
+          <div class="th-wrapper">
             <p>Remote Interview</p>
             <div class="sort-buttons-wrapper">
               <a class="button button_sort button_down" href="{{ulr_for_sort}}sort_asc=remote_interview" title="sort by asc"></a>
@@ -119,6 +128,7 @@
         <td class="table__td table__td_centered">{{ vacancy.country_code }}</td>
         <td class="table__td table__td_centered">{{ vacancy.city }}</td>
         <td class="table__td table__td_centered">{{ vacancy.specialization }}</td>
+        <td class="table__td table__td_centered">{{ vacancy.experience_level }}</td>
         <td class="table__td table__td_centered">{{ vacancy.remote_interview }}</td>
         <td class="table__td table__td_centered">{{ vacancy.workplace_type }}</td>
         <td class="table__td table__td_centered">{{ vacancy.rate }}</td>
