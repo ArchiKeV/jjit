@@ -96,6 +96,7 @@ class SortName(str, Enum):
     city = "city"
     country_code = "country_code"
     specialization = "specialization"
+    experience_level = "experience_level"
     remote_interview = "remote_interview"
     workplace_type = "workplace_type"
     rate = "rate"
